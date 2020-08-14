@@ -1,21 +1,19 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import Header from './header.js';
-import SignUp from './Signup';
-import RecipeCard from './RecipeCard';
-import RecipeView from './RecipeView';
-import EditRecipe from './EditRecipe';
+import 'bootstrap/dist/css/bootstrap.css';
+import LandingPage from './pages/LandingPage';
+import ViewAllRecipe from './pages/ViewAllRecipe';
 
+
+/*
+if no token, show the login page
+if token valid, show the view all recipe page
+*/
 
 function App() {
   return (
     <div>
-
-      <RecipeCard/>
-      <SignUp login={false} />
-      <RecipeView/>
-      <EditRecipe/>
+      <LandingPage/>
     </div>
   );
 }

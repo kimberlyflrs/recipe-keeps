@@ -1,14 +1,14 @@
 import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, DELETE_ACCOUNT} from './actionType';
 
-export const ADD_RECIPE = () => ({
+export const addRecipe = () => ({
     type: ADD_RECIPE
 })
 
-export const DELETE_RECIPE = () => ({
+export const deleteRecipe = () => ({
     type: DELETE_RECIPE
 })
 
-export const EDIT_RECIPE = () => ({
+export const editRecipe = () => ({
     type: EDIT_RECIPE
 })
 

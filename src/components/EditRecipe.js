@@ -10,6 +10,11 @@ class EditRecipe extends React.Component{
     constructor(props){
         super(props);
         this.recipe = props.recipe;
+        this.title = props.title;
+        this.prep = props.prep;
+        this.cook = props.cook;
+        this.ingridients = props.ingridients;
+        this.steps = props.step;
     }
     //upload image
 

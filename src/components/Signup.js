@@ -7,17 +7,29 @@ import Button from 'react-bootstrap/Button';
 class SignUp extends React.Component{
     constructor(props){
         super(props);
-        this.login = props.login;
+
+        this.state = {
+            new_user: true
+        }
+        this.newUser = this.newUser.bind(this);
     }
 
     //check the password, (if no match, show error)
     //check if the account exists (if yes, show error)(else make account)
     //
 
+    //make function to change login to signup
+    newUser(){
+        this.setState({
+            new_user: !(this.state.new_user)
+        })
+        console.log(this.state.new_user);
+    }
+
     render(){
-        if (this.login){
+        if (this.state.new_user){
             return(
-                <div class="form">
+                <div className="form">
                     <h1>Login</h1>
                     <Form>
                         <Form.Group>
@@ -32,12 +44,12 @@ class SignUp extends React.Component{
 
                         <Button>Login</Button>
                     </Form>
-                    <a href="">New to RecipeKeeps? Sign Up</a>
+                    <button onClick={()=>this.newUser()}>New to RecipeKeeps? Sign Up</button>
                 </div>
             )
         }
         return(
-            <div class="form">
+            <div className="form">
                 <h1>Sign Up</h1>
                 <Form>
                     <Form.Group>
@@ -57,7 +69,7 @@ class SignUp extends React.Component{
 
                     <Button>Create Account</Button>
                 </Form>
-                <a href="">Already have an account? Login </a>
+                <button onClick={()=>this.newUser()}>Already have an account? Login </button>
             </div>
 
         )

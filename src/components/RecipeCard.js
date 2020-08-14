@@ -7,7 +7,8 @@ import Button from 'react-bootstrap/Button';
 class RecipeCard extends React.Component{
     constructor(props){
         super(props);
-        this.recipe = props.recipe;
+        this.title = props.title;
+        this.prep = props.prep;
     }
 
     render(){
@@ -15,8 +16,8 @@ class RecipeCard extends React.Component{
         <Card bg="light" style={{width: '18rem'}}>
             <Card.Body>
                 <Card.Img variant="top" src=""/>
-                <Card.Title>Title</Card.Title>
-                <Card.Text>Small Description here</Card.Text>
+                <Card.Title>{this.title}</Card.Title>
+                <Card.Text>{this.prep}</Card.Text>
                 <Button>View Recipe</Button>
             </Card.Body>
         </Card>
