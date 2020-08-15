@@ -25,7 +25,10 @@ const initialState = {
 const recipes = (state = initialState, action) =>{
   switch (action.type) {
     case ADD_RECIPE: {
-      console.log(state.recipes)
+      return{
+        ...state,
+        recipes: [...state.recipes, action.recipe]
+      }
     }
 
 

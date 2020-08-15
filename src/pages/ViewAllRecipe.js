@@ -21,7 +21,7 @@ class ViewAllRecipe extends React.Component{
 
     render(){
         var content = this.props.all_recipes.map((x, i)=>
-            <RecipeCard key={i} title={x.name} prep={x.prep_time}/>
+            <RecipeCard key={i} title={x.name} prep={x.prep_time} index={i}/>
         );
         return(
             <div>

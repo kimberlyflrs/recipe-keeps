@@ -1,7 +1,8 @@
 import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, DELETE_ACCOUNT} from './actionType';
 
-export const addRecipe = () => ({
-    type: ADD_RECIPE
+export const addRecipe = (recipe) => ({
+    type: ADD_RECIPE,
+    recipe: recipe
 })
 
 export const deleteRecipe = () => ({
@@ -15,17 +16,17 @@ export const editRecipe = () => ({
 
 
 
-export const LOGIN = () => ({
+export const login = () => ({
     type: LOGIN
 })
 
-export const LOGOUT = () => ({
+export const logout = () => ({
     type: LOGOUT
 })
 
 
 
 
-export const DELETE_ACCOUNT = () => ({
+export const deleteAccount = () => ({
     type: DELETE_ACCOUNT
 })

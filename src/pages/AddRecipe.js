@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from '../components/Header.js';
-import RecipeCard from '../components/RecipeCard.js';
+import EditRecipe from '../components/EditRecipe.js';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -13,20 +13,17 @@ class AddRecipe extends React.Component{
         
     }
 
+    addRecipe(){
+        //adds a recipe to the user's recipe
+    }
+
     render(){
         return(
             <div>
             <Header/>
             <Container fluid>
                 <Row>
-                    <Col xs={12} sm={12} m={6} lg={6}>
-                    </Col>
-                    <Col xs={12} sm={12} m={6} lg={6}>
-                    <button>Add Recipe </button>
-                    </Col>
-                </Row>
-                <Row>
-                    <RecipeCard/>
+                    <EditRecipe title="Chip" newRecipe="true"/>
                 </Row>
             </Container>
             </div>

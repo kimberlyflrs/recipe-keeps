@@ -3,6 +3,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import LandingPage from './pages/LandingPage';
 import ViewAllRecipe from './pages/ViewAllRecipe';
+import AddRecipe from './pages/AddRecipe';
 
 
 /*
@@ -13,7 +14,7 @@ if token valid, show the view all recipe page
 function App() {
   return (
     <div>
-      <LandingPage/>
+      <AddRecipe/>
     </div>
   );
 }
