@@ -1,20 +1,13 @@
 import React from 'react';
 import Header from '../components/Header.js';
-import EditRecipe from '../components/EditRecipe.js';
+import RecipeForm from '../components/RecipeForm.js';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-
-//needs an empty form
 
 class AddRecipe extends React.Component{
     constructor(props){
         super(props);
         
-    }
-
-    addRecipe(){
-        //adds a recipe to the user's recipe
     }
 
     render(){
@@ -23,7 +16,7 @@ class AddRecipe extends React.Component{
             <Header/>
             <Container fluid>
                 <Row>
-                    <EditRecipe title="Chip" newRecipe="true"/>
+                    <RecipeForm newRecipe={true}/>
                 </Row>
             </Container>
             </div>

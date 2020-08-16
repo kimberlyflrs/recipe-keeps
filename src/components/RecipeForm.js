@@ -1,33 +1,35 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {addRecipe} from '../redux/actions';
+import {addRecipe, deleteRecipe, editRecipe} from '../redux/actions';
 import 'bootstrap/dist/css/bootstrap.css';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 
-//change name to recipe form
+//Recipe Form can display edit mode and create a new recipe
 
-class EditRecipe extends React.Component{
+class RecipeForm extends React.Component{
     constructor(props){
         super(props);
         this.state = {
             recipe: props.recipe,
-            title: props.title || "",
+            name: props.name || "",
             prep: props.prep || "",
             cook: props.cook || "",
             ingridients: props.ingridients || "",
             steps: props.step || "",
     
             newRecipe: props.newRecipe,
-
-            validated: false,
-            setValidated: false
+            showModal: false,
+            index: this.props.index
         }
         this.handleInputChange = this.handleInputChange.bind(this);
         this.mySubmitHandler = this.mySubmitHandler.bind(this);
+        this.deleteRecipe = this.deleteRecipe.bind(this);
+        this.showModal = this.showModal.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
     handleInputChange(e){
@@ -38,24 +40,47 @@ class EditRecipe extends React.Component{
 
     mySubmitHandler = (event) => {
         event.preventDefault();
-        if(this.state.title==="" || this.state.prep === "" || this.state.cook ==="" || this.state.prep==="" || this.state.steps ==="" || this.state.ingridients===""){
+        if(this.state.name==="" || this.state.prep === "" || this.state.cook ==="" || this.state.prep==="" || this.state.steps ==="" || this.state.ingridients===""){
             alert("Field cannot be empty");
         }
         else{
             var newRecipe= {
-                title:this.state.title,
+                name:this.state.name,
                 prep:this.state.prep,
                 cook: this.state.cook,
                 ingredients:this.state.ingridients,
                 directions: this.state.steps
             }
-            this.props.addRecipe(newRecipe);
+            if(this.state.newRecipe){
+                this.props.addRecipe(newRecipe); //if new call this, else call editRecipe dispatch
+            }
+            else{
+                this.props.editRecipe(newRecipe, this.state.index); //if new call this, else call editRecipe dispatch
+            }
+
             //possibly another function to add it to the database [future]
             //redirect to view recipe page after adding
         }
       }
 
+
+    deleteRecipe(){
+        this.props.deleteRecipe(this.state.index);
+        this.handleClose();
+
+    }
+
+    showModal(){
+        this.setState({
+            showModal:true
+        })
+    }
   
+    handleClose(){
+        this.setState({
+            showModal: false
+        })
+    }
 
 
     //upload image
@@ -65,7 +90,8 @@ class EditRecipe extends React.Component{
             var buttons = <button type="submit">Add Recipe</button>;
         }
         else{
-            var buttons = <div><button>Save</button><button>Delete</button></div>;
+            var buttons = <button type="submit">Save</button>;
+            var deleteBtn = <button onClick={this.showModal}>Delete</button>;
 
         }
         return(
@@ -76,9 +102,9 @@ class EditRecipe extends React.Component{
             <Button>Back to All Recipes</Button>
             <Form onSubmit={this.mySubmitHandler}>
             <h3>Image goes here</h3>
-            <Form.Group controlId="formTitle">
-            <Form.Label>Title</Form.Label>
-        <Form.Control type="text" name="title" value={this.state.title} onChange={this.handleInputChange}></Form.Control>
+            <Form.Group controlId="formName">
+            <Form.Label>Name</Form.Label>
+        <Form.Control type="text" name="name" value={this.state.name} onChange={this.handleInputChange}></Form.Control>
             </Form.Group>
 
             <Form.Group controlId="formPrep">
@@ -101,6 +127,30 @@ class EditRecipe extends React.Component{
 
             {buttons}
             </Form>
+            {deleteBtn}
+
+
+            <Modal
+        show={this.state.showModal}
+        onHide={this.handleClose}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Delete Recipe</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete this recipe?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={this.handleClose}>
+            No
+          </Button>
+          <Button variant="primary" onClick={this.deleteRecipe}>Yes</Button>
+        </Modal.Footer>
+      </Modal>
+
+
 
         </div>
 
@@ -111,7 +161,9 @@ class EditRecipe extends React.Component{
 
 //connect redux dispatch here
 const mapDispatchToProps = {
-    addRecipe
+    addRecipe,
+    deleteRecipe,
+    editRecipe
 };
 
-export default connect(null,mapDispatchToProps)(EditRecipe);
+export default connect(null,mapDispatchToProps)(RecipeForm);

@@ -26,7 +26,7 @@ class SingleRecipe extends React.Component{
             <Header/>
             <Container fluid>
                 <Row>
-                    <RecipeView/>
+                    <RecipeView index={1}/>
                 </Row>
             </Container>
             </div>

@@ -5,12 +5,15 @@ export const addRecipe = (recipe) => ({
     recipe: recipe
 })
 
-export const deleteRecipe = () => ({
-    type: DELETE_RECIPE
+export const deleteRecipe = (index) => ({
+    type: DELETE_RECIPE,
+    index: index
 })
 
-export const editRecipe = () => ({
-    type: EDIT_RECIPE
+export const editRecipe = (recipe, index) => ({
+    type: EDIT_RECIPE,
+    recipe:recipe,
+    index: index
 })
 
 

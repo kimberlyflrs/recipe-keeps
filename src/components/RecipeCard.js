@@ -11,6 +11,8 @@ class RecipeCard extends React.Component{
         this.prep = props.prep;
     }
 
+    //view recipe btn should take the user to the singleRecipe page
+
     render(){
         return(
         <Card bg="light" style={{width: '18rem'}}>
