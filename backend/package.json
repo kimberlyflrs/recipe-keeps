@@ -1,7 +1,7 @@
 {
   "name": "recipe_keeps",
   "version": "1.0.0",
-  "description": "backend server for recipe keeps",
+  "description": "backend server for recipe keeps project",
   "main": "server.js",
   "scripts": {
     "test": "node server.js",
