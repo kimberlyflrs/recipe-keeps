@@ -1,0 +1,16 @@
+{
+  "name": "recipe_keeps",
+  "version": "1.0.0",
+  "description": "backend server for recipe keeps",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server.js",
+    "start": "node server.js"
+  },
+  "author": "Kimberly Flores",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongodb": "^3.6.0"
+  }
+}
