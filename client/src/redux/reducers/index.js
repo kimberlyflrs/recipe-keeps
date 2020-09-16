@@ -1,12 +1,16 @@
 import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, DELETE_ACCOUNT } from "../actionType";
+import axios from 'axios';
 
 //login switches to true, adds user info into the state
 //login switches to false, gets rid of all user info
 //delete will get rid of all user info on app and database
 
+
+//AXIOS DOES NOT GO HERE, DATA WILL BE RECEIVED FROM THE PAYLOAD
+
 const initialState = {
   user: 'email@email.com',
-  login: true,
+  login: false,
   recipes: [{
       name:'bread',
       prep_time: '5:00',
@@ -64,6 +68,14 @@ const recipes = (state = initialState, action) =>{
         ...state,
         recipes: state.recipes.slice(action.index-1, action.index).concat(action.recipe).concat(state.recipes.slice(action.index+1))
       }
+    }
+
+
+    case LOGIN:{
+      console.log('trying to log in');
+      axios.get('/users').then(function(response){
+        console.log(response.data);
+    })
     }
 
 

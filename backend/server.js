@@ -6,6 +6,7 @@ require("dotenv/config");
 const mongoose = require('mongoose');
 
 const User = require("./models/User");
+const UserSession = require("./models/UserSession");
 
 //custom middleware
 //do checking for token, is logged in
@@ -23,24 +24,111 @@ app.get('/', function(req,res){
     res.send('hello!!');
 })
 
-//get user information
+
+/*
+Sign Up
+*/
+//add new user
+app.post('/new_user', async function(req, res){
+    //email set to lower case
+    email = req.body['email'].toLowerCase();
+    //Steps
+    //1. Check email doesn't exist
+
+    User.find({email: email}, (err, docs)=>{
+        if(err){
+            res.send({
+                message: "Error: Server Error"
+            })
+        }
+        else if(docs.length>0){
+            res.send({
+                message: "Error: Account Exists"
+            })
+        }
+        else{
+            //Saves information
+                const myuser = new User();
+                myuser.name = req.body['name'];
+                myuser.email = email;
+                myuser.password = myuser.generateHash(req.body['password']);
+                myuser.save((err,user)=>{
+                    if(err){
+                        res.send({message: err}); 
+                    }
+                    else{
+                        console.log(myuser);
+                        res.send({message: "Success!"});               
+                    }
+                });
+            }            
+        })
+})
+
+
+/*
+Login 
+*/
+app.post('/login', function(req,res){
+    console.log('Log In');
+    email = req.body['email'].toLowerCase();
+
+    //Step 1. Check if the user exists
+    // ---if no throw error
+    // ---else if the user exists
+    //-------check if the passwords match and if it does then start a user session
+    //-------else throw an error
+    User.find({email: email}, (err,docs)=>{
+        if(err){
+            res.send({message: "Error: Server Error 1"})
+        }
+        else if(docs.length == 0){
+            res.send({message: "Error: Account does not exist"});
+        }
+        else{
+            const user = docs[0];
+            if(!user.validPassword(req.body['password'])){
+                res.send({message: "Invalid Password"});
+            }
+            else{
+                const userSession = new UserSession();
+                userSession.userid = user._id;
+                console.log(userSession);
+                userSession.save((err, doc) =>{
+                    if(err){
+                        console.log(err);
+                        res.send({message: "Error: Server Error 2"});
+                    }
+                    else{
+                        console.log(userSession);
+                        res.send({
+                            message: "User Session Created",
+                            token: doc._id
+                    });
+                    }
+                })
+            }
+        }
+    })
+})
+
+//gets the user file
 app.get('/users', function(req, res){
-    let users = ["number 1", "number 2"];
+    //let users = ["number 1", "number 2"];
+    //res.send({users: users,});
+    console.log('Request: '+req.body['email']);
+    User.findOne({email: req.body['email']}, function(err,docs){
+        if(err || !docs){
+            res.send('Error Message:' + err)
+        }
+        else{
+            res.send('Found!: '+ docs);
+            return docs;
+        }
+    });
 
-    res.send({users: users,});
 })
 
-//add new entry
-app.post('/new_entry', async function(req, res){
-    try{
-        const myuser = new User(req.body);
-        await myuser.save();
-        res.send(myuser);
-    }
-    catch(err){
-        res.send({message: err});
-    }
-})
 
 //edit existing entry
 app.post('/edit_entry', function(req, res){
@@ -55,4 +143,4 @@ mongoose.connect(
         console.log("Connected to the DB");
 });
 
-app.listen(3000, process.env.IP, ()=> console.log('starting server'));
+app.listen(5000, process.env.IP, ()=> console.log('starting server'));

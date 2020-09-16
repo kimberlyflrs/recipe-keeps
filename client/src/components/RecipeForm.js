@@ -6,6 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import {Redirect} from 'react-router-dom';
 
 
 //Recipe Form can display edit mode and create a new recipe
@@ -23,13 +24,16 @@ class RecipeForm extends React.Component{
     
             newRecipe: props.newRecipe,
             showModal: false,
-            index: this.props.index
+            index: this.props.index,
+
+            navAllRecipe:false
         }
         this.handleInputChange = this.handleInputChange.bind(this);
         this.mySubmitHandler = this.mySubmitHandler.bind(this);
         this.deleteRecipe = this.deleteRecipe.bind(this);
         this.showModal = this.showModal.bind(this);
         this.handleClose = this.handleClose.bind(this);
+        this.backToAllRecipe = this.backToAllRecipe.bind(this);
     }
 
     handleInputChange(e){
@@ -82,10 +86,19 @@ class RecipeForm extends React.Component{
         })
     }
 
+    backToAllRecipe(){
+        this.setState({
+            navAllRecipe:true
+        })
+    }
+
 
     //upload image
 
     render(){
+        if(this.state.navAllRecipe){
+            return <Redirect to="viewRecipes"/>
+        }
         var buttons;
         if(this.state.newRecipe){
             buttons = <button type="submit">Add Recipe</button>;
@@ -100,7 +113,7 @@ class RecipeForm extends React.Component{
             <Row>
             <h1>How a Recipe Form looks like</h1>
             </Row>
-            <Button>Back to All Recipes</Button>
+            <Button onClick={this.backToAllRecipe}>Back to All Recipes</Button>
             <Form onSubmit={this.mySubmitHandler}>
             <h3>Image goes here</h3>
             <Form.Group controlId="formName">

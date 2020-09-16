@@ -5,6 +5,9 @@ import RecipeCard from '../components/RecipeCard.js';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import {Redirect} from 'react-router-dom';
+
+import axios from 'axios';
 
 
 //add recipe button takes you to the add recipe page
@@ -12,14 +15,35 @@ import Col from 'react-bootstrap/Col';
 class ViewAllRecipe extends React.Component{
     constructor(props){
         super(props);
+        this.state = {
+            navAddRecipe: false
+        }
         this.view = this.view.bind(this);
+        this.addRecipe = this.addRecipe.bind(this);
     }
 
     view(){
         console.log(this.props.all_recipes)
     }
 
+    addRecipe(){
+        //navigates to the add recipe page
+        this.setState({
+            navAddRecipe: true
+        })
+    }
+
+
+    componentDidMount(){
+        axios.get('/users').then(function(response){
+            console.log(response.data);
+        })
+    }
+
     render(){
+        if(this.state.navAddRecipe){
+            return <Redirect to="/addRecipe"/>
+        }
         var content = this.props.all_recipes.map((x, i)=>
             <RecipeCard key={i} title={x.name} prep={x.prep_time} index={i}/>
         );
@@ -31,7 +55,7 @@ class ViewAllRecipe extends React.Component{
                     <Col xs={12} sm={12} m={6} lg={6}>
                     </Col>
                     <Col xs={12} sm={12} m={6} lg={6}>
-                    <button>Add Recipe </button>
+                    <button onClick={this.addRecipe}>Add Recipe </button>
                     </Col>
                 </Row>
                 <Row>
