@@ -35,9 +35,7 @@ class ViewAllRecipe extends React.Component{
 
 
     componentDidMount(){
-        axios.get('/users').then(function(response){
-            console.log(response.data);
-        })
+
     }
 
     render(){

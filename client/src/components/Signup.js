@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import {Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {login} from '../redux/actions';
+import { getFromStorage, setInStorage} from '../utils/storage.js';
 
 
 class SignUp extends React.Component{
@@ -12,7 +13,8 @@ class SignUp extends React.Component{
 
         this.state = {
             new_user: true,
-            info_valid:false
+            info_valid:false,
+            token: ''
         }
         this.newUser = this.newUser.bind(this);
         this.login = this.login.bind(this);
@@ -22,6 +24,36 @@ class SignUp extends React.Component{
     //check the password, (if no match, show error)
     //check if the account exists (if yes, show error)(else make account)
     //
+
+    componentDidMount(){
+        //we will be checking if there is a token present
+        const token = getFromStorage('the_main_app');
+        //console.log(token.token);
+        //console.log(this.state);
+        try{
+
+            fetch('/verify?token='+token.token)
+            .then(res=>res.json())
+            .then(data => {
+                console.log(data);
+                if(data.status){
+                    this.setState({
+                        info_valid:true,
+                        token: token,
+                    })
+                    console.log('i set the token');
+                }
+                else{
+                    console.log('whoops');
+                    this.setState({
+                        info_valid:false
+                    })
+                }
+            })
+        }catch(err){
+            console.log('no token available');
+        }
+    }
 
     //make function to change login to signup
     newUser(){
@@ -35,10 +67,35 @@ class SignUp extends React.Component{
     login(email, password){
     //attempt to find user with this info call the login prop
     //if found
-    this.props.login();
+    /*this.props.login();
         this.setState({
             info_valid: true
+        })*/
+    console.log("here it's the login function");
+    fetch('/login', {
+        method:'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: document.forms["loginForm"]["email"].value,
+            password: document.forms["loginForm"]["password"].value
         })
+    }).then(res =>res.json())
+    .then(data => {
+        console.log(data);
+        if(data.status){
+            setInStorage('the_main_app', {token: data.token});
+            this.setState({
+                token: data.token,
+                new_user:false,
+                info_valid: true
+            })
+        }
+        else{
+            console.log('Error: '+data.message)
+        }
+    })
     //else show error
     //else show error
 
@@ -60,7 +117,7 @@ class SignUp extends React.Component{
       }
 
     render(){
-        if(this.state.info_valid){
+        if(this.state.token){
             return <Redirect to="/viewRecipes"/>
         }
         if (this.state.new_user){

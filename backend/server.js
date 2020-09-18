@@ -28,8 +28,7 @@ app.get('/', function(req,res){
 /*
 Sign Up
 */
-//add new user
-app.post('/new_user', async function(req, res){
+app.post('/signup', function(req, res, next){
     //email set to lower case
     email = req.body['email'].toLowerCase();
     //Steps
@@ -37,12 +36,14 @@ app.post('/new_user', async function(req, res){
 
     User.find({email: email}, (err, docs)=>{
         if(err){
-            res.send({
+            return res.send({
+                status:true,
                 message: "Error: Server Error"
             })
         }
         else if(docs.length>0){
-            res.send({
+            return res.send({
+                status:false,
                 message: "Error: Account Exists"
             })
         }
@@ -54,11 +55,11 @@ app.post('/new_user', async function(req, res){
                 myuser.password = myuser.generateHash(req.body['password']);
                 myuser.save((err,user)=>{
                     if(err){
-                        res.send({message: err}); 
+                        return res.send({status:false, message: err}); 
                     }
                     else{
                         console.log(myuser);
-                        res.send({message: "Success!"});               
+                        return res.send({status: true, message: "Success!"});               
                     }
                 });
             }            
@@ -69,8 +70,9 @@ app.post('/new_user', async function(req, res){
 /*
 Login 
 */
-app.post('/login', function(req,res){
+app.post('/login', function(req, res, next){
     console.log('Log In');
+    console.log(req);
     email = req.body['email'].toLowerCase();
 
     //Step 1. Check if the user exists
@@ -80,28 +82,28 @@ app.post('/login', function(req,res){
     //-------else throw an error
     User.find({email: email}, (err,docs)=>{
         if(err){
-            res.send({message: "Error: Server Error 1"})
+            return res.send({status:false, message: "Error: Server Error 1"})
         }
         else if(docs.length == 0){
-            res.send({message: "Error: Account does not exist"});
+            return res.send({status:false, message: "Error: Account does not exist"});
         }
         else{
             const user = docs[0];
             if(!user.validPassword(req.body['password'])){
-                res.send({message: "Invalid Password"});
+                return res.send({status:false, message: "Invalid Password"});
             }
             else{
                 const userSession = new UserSession();
                 userSession.userid = user._id;
-                console.log(userSession);
                 userSession.save((err, doc) =>{
                     if(err){
                         console.log(err);
-                        res.send({message: "Error: Server Error 2"});
+                        return res.send({status: false, message: "Error: Server Error 2"});
                     }
                     else{
-                        console.log(userSession);
-                        res.send({
+                        console.log('success')
+                        return res.send({
+                            status:true,
                             message: "User Session Created",
                             token: doc._id
                     });
@@ -112,27 +114,52 @@ app.post('/login', function(req,res){
     })
 })
 
-//gets the user file
-app.get('/users', function(req, res){
-    //let users = ["number 1", "number 2"];
-    //res.send({users: users,});
-    console.log('Request: '+req.body['email']);
-    User.findOne({email: req.body['email']}, function(err,docs){
-        if(err || !docs){
-            res.send('Error Message:' + err)
+/*
+Verifys the token is valid
+ */
+app.get('/verify', function(req, res, next){
+    const {query} = req;
+    const {token} = query; //get the token
+    //verify that it is one of a kind and active
+    UserSession.find({_id: token, active: false}, 
+        (err,docs)=>{
+            console.log(docs);
+        if(docs===undefined){//no docs found
+            return res.send({status:false, message: "Error: undefined"})
+        }
+        else if(err){//error thrown by server
+            return res.send({status:false, message: "Error: Server Error" })
+        }
+        else if (docs.length != 1){//no unique document found
+            return res.send({status:false, message: "Error: No sessions found"})
         }
         else{
-            res.send('Found!: '+ docs);
-            return docs;
+            return res.send({status:true, message: "Successful verification"})
         }
-    });
-
+    })
 })
 
 
-//edit existing entry
-app.post('/edit_entry', function(req, res){
-
+/*
+Logout
+*/
+app.get('/logout', function(req, res, next){
+    const {query} = req;
+    const {token} = query; //get the token
+    //verify that it is one of a kind and active
+    UserSession.findOneAndUpdate({
+        _id: token, active: true
+        }, {
+            $set:{active:false}
+            },null,
+        (err,docs)=>{
+        if(err){//error thrown by server
+            return res.send({status: false, message: "Error: Server Error" })
+        }
+        else{
+            return res.send({status: true, message: "Good"})
+        }
+    })
 })
 
 
