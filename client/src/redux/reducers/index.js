@@ -1,5 +1,4 @@
-import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, DELETE_ACCOUNT } from "../actionType";
-import axios from 'axios';
+import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, LOAD_USER, DELETE_ACCOUNT } from "../actionType";
 
 //login switches to true, adds user info into the state
 //login switches to false, gets rid of all user info
@@ -10,7 +9,7 @@ import axios from 'axios';
 
 const initialState = {
   user: 'email@email.com',
-  login: false,
+  logged_in: false,
   recipes: [{
       name:'bread',
       prep_time: '5:00',
@@ -72,12 +71,24 @@ const recipes = (state = initialState, action) =>{
 
 
     case LOGIN:{
-      console.log('trying to log in');
-      axios.get('/users').then(function(response){
-        console.log(response.data);
-    })
+      if(action.payload.status){
+        console.log('success');
+        //set the token
+        localStorage.setItem("token", action.payload.acessToken);
+        console.log("token has been set "+action.payload.acessToken);
+        return {...state, logged_in:true}
+      }
+      else{
+        console.log("can't login");
+        return {state}
+      }
     }
 
+    case LOAD_USER:{
+      console.log("we are loading the user info");
+      console.log(action.payload);
+      return {...state}
+    }
 
     default:
       return state;

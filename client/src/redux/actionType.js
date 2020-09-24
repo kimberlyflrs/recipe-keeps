@@ -5,5 +5,6 @@ export const EDIT_RECIPE = "EDIT_RECIPE";
 
 export const LOGIN = "LOGIN";
 export const LOGOUT = "LOGOUT";
+export const LOAD_USER = "LOAD_USER";
 
 export const DELETE_ACCOUNT = "DELETE_ACCOUNT";

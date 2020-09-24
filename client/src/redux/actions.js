@@ -1,4 +1,89 @@
-import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, DELETE_ACCOUNT} from './actionType';
+import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, DELETE_ACCOUNT, LOAD_USER} from './actionType';
+import axios from 'axios';
+import setAuth from '../utils/setAuth.js';
+
+function auth(){
+    if(localStorage.token){
+        setAuth(localStorage.token);
+    }
+}
+
+
+export const userInfo = () => async dispatch =>{
+    //loads the user info (name, food entries)
+    console.log('we are getting the user info rn');
+    try{
+        const res =  await axios.get('/login', 
+        {headers: {
+            'Content-Type': 'application/json'}
+        });
+        dispatch({
+            type: LOAD_USER,
+            payload: res.data
+            });
+    }
+    catch(err){
+            console.log(err);
+    } 
+}
+
+
+
+export const login = (email, password) => async dispatch =>{
+    //checks if there is a user with that credential
+
+    try {
+        const res = await axios.post('/login', 
+        {"email": email,
+         "password": password},
+        {headers: {'Content-Type': 'application/json'}}   
+        );
+        dispatch({
+            type: LOGIN,
+            payload: res.data
+        });
+
+        auth();//add authorization errors
+    } 
+    catch (error) {
+        console.log('error caught in action.js');
+    }
+}
+
+
+export const resume = () => async dispatch =>{
+    //checks if there is a user with that credential
+
+    try {
+        const res = await axios.post('/verify',
+        {headers: {'Content-Type': 'application/json'}}   
+        );
+        dispatch({
+            type: LOGIN,
+            payload: res.data
+        });
+
+        auth();//add authorization errors
+    } 
+    catch (error) {
+        console.log('error caught in action.js');
+    }
+}
+
+
+
+export const logout = () => ({
+    type: LOGOUT
+})
+
+
+
+
+export const deleteAccount = () => ({
+    type: DELETE_ACCOUNT
+})
+
+
 
 export const addRecipe = (recipe) => ({
     type: ADD_RECIPE,
@@ -14,22 +99,4 @@ export const editRecipe = (recipe, index) => ({
     type: EDIT_RECIPE,
     recipe:recipe,
     index: index
-})
-
-
-
-
-export const login = () => ({
-    type: LOGIN
-})
-
-export const logout = () => ({
-    type: LOGOUT
-})
-
-
-
-
-export const deleteAccount = () => ({
-    type: DELETE_ACCOUNT
 })

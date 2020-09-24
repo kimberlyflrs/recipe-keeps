@@ -7,9 +7,6 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import {Redirect} from 'react-router-dom';
 
-import axios from 'axios';
-
-
 //add recipe button takes you to the add recipe page
 
 class ViewAllRecipe extends React.Component{
@@ -35,7 +32,8 @@ class ViewAllRecipe extends React.Component{
 
 
     componentDidMount(){
-
+        //assuming user is valid
+        //load all of the users information
     }
 
     render(){
