@@ -75,6 +75,13 @@ class SignUp extends React.Component{
         }
     }
 
+
+    register(name, email, password){
+        //await the registration
+        //now login
+        //success then load the use info
+    }
+
     mySubmitHandler = (event) => {
         //checks if inputs are not empty
         event.preventDefault();
