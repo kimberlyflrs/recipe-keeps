@@ -9,6 +9,7 @@ require("dotenv/config");
 const mongoose = require('mongoose');
 
 const User = require("./models/User");
+const FoodEntry = require("./models/FoodEntry");
 const RefreshToken = require("./models/RefreshToken");
 
 
@@ -34,6 +35,7 @@ Sign Up
 */
 app.post('/signup', function(req, res, next){
     //email set to lower case
+    console.log('signing up');
     email = req.body['email'].toLowerCase();
     //Steps
     //1. Check email doesn't exist
@@ -54,25 +56,27 @@ app.post('/signup', function(req, res, next){
         else{
             //Saves information
                 const myuser = new User();
-                myuser.name = req.body['name'];
                 myuser.email = email;
                 myuser.password = myuser.generateHash(req.body['password']);
-                myuser.save((err,user)=>{
-                    if(err){
-                        return res.send({status:false, message: err}); 
-                    }
-                    else{
-                        console.log(myuser);
-                        return res.send({status: true, message: "Success!"});               
-                    }
-                });
+                const fooddb = new FoodEntry();
+                fooddb.userId = myuser._id;
+                try{
+                    myuser.save();
+                    fooddb.save();
+                    return res.send({status:true, message: "Successful registration"});
+                }
+                catch(err){
+                    return res.send({status:false, message:err})
+                }
+
+
             }            
         })
 })
 
 
 /*
-Login WILL BE REMOVED
+Login POST
 */
 app.post('/login', function(req, res, next){ 
     console.log('Log In through /login route');
@@ -116,7 +120,7 @@ app.post('/login', function(req, res, next){
 
 
 /*
-Login WILL BE REMOVED
+Login GET
 */
 app.get('/login', function(req, res, next){ 
     console.log('Getting user info through /login route');
@@ -125,13 +129,14 @@ app.get('/login', function(req, res, next){
 
     try {
         const decoded = jwt.verify(authorization, process.env.ACCESS_TOKEN);
+        console.log(decoded);
         //get name, recipes
-        User.findById(decoded._id, (err,docs)=>{
+        FoodEntry.find({userId: decoded._id}, (err,docs)=>{
             if(err){
-                return res.json("server error")
+                return res.send({status:false, message:"server error"});
             }
             else{
-                return res.json(docs);
+                return res.send({status:true, message: docs[0]['Entries']});
             }
         });
       } catch (err) {
@@ -201,11 +206,6 @@ app.delete('/logout', function(req,res,next){
     })
 })
 
-
-/* TEST Posts */
-app.get('/posts', authenticateToken, function(req,res,next){
-    return res.json(test_post);
-})
 
 
 /*Generate Acess Token */

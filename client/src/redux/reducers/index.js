@@ -1,15 +1,13 @@
-import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, LOAD_USER, DELETE_ACCOUNT } from "../actionType";
+import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, LOAD_USER, DELETE_ACCOUNT, SIGNUP, LOAD_INFO } from "../actionType";
 
 //login switches to true, adds user info into the state
 //login switches to false, gets rid of all user info
-//delete will get rid of all user info on app and database
-
 
 //AXIOS DOES NOT GO HERE, DATA WILL BE RECEIVED FROM THE PAYLOAD
 
 const initialState = {
-  user: 'email@email.com',
   logged_in: false,
+  registered: false,
   recipes: [{
       name:'bread',
       prep_time: '5:00',
@@ -40,7 +38,6 @@ const initialState = {
         }]
 };
 
-//we need to make async calls to the database eventually
 
 const recipes = (state = initialState, action) =>{
   switch (action.type) {
@@ -85,9 +82,16 @@ const recipes = (state = initialState, action) =>{
     }
 
     case LOAD_USER:{
-      console.log("we are loading the user info");
-      console.log(action.payload);
-      return {...state}
+      //sets the recipe entries into state.recipes
+      return {...state, recipes:action.payload.message}
+    }
+
+    case SIGNUP:{
+      //sets registered to true
+      if(action.payload.status){
+        return {...state, registered:true}
+      }
+      return {state}
     }
 
     default:

@@ -5,7 +5,8 @@
   "main": "authserver.js",
   "scripts": {
     "test": "nodemon authserver.js",
-    "start": "nodemon authserver.js"
+    "devstart": "nodemon authserver.js",
+    "devstart2": "nodemon server.js"
   },
   "author": "Kimberly Flores",
   "license": "ISC",

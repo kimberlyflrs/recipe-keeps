@@ -15,13 +15,9 @@ class ViewAllRecipe extends React.Component{
         this.state = {
             navAddRecipe: false
         }
-        this.view = this.view.bind(this);
         this.addRecipe = this.addRecipe.bind(this);
     }
 
-    view(){
-        console.log(this.props.all_recipes)
-    }
 
     addRecipe(){
         //navigates to the add recipe page
@@ -34,15 +30,20 @@ class ViewAllRecipe extends React.Component{
     componentDidMount(){
         //assuming user is valid
         //load all of the users information
+        console.log(this.props.all_recipes);
     }
 
     render(){
         if(this.state.navAddRecipe){
             return <Redirect to="/addRecipe"/>
         }
-        var content = this.props.all_recipes.map((x, i)=>
-            <RecipeCard key={i} title={x.name} prep={x.prep_time} index={i}/>
-        );
+        if(this.props.all_recipes.length === 0){
+            var content = <h2>No recipes</h2>
+        }
+        else{
+            var content = this.props.all_recipes.map((x, i)=>
+            <RecipeCard key={i} title={x.name} prep={x.prep_time} index={i}/>);
+        }
         return(
             <div>
             <Header/>

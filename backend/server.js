@@ -3,9 +3,11 @@ var app = express();
 const jwt = require('jsonwebtoken');
 require("dotenv/config");
 const mongoose = require('mongoose');
+const FoodEntry = require("./models/FoodEntry");
+
 
 function middleware(req, res, next){
-    console.log('here is my middleware');
+    console.log('here is my middleware2');
     next();
 }
 
@@ -23,12 +25,32 @@ app.get('/entries', function(req,res,next){
     //parse the token and decode it
     //look for file with that user id
     //when found, send info back
+    console.log('Getting entries');
+    console.log("req headers"+req.headers.authorization);
+    const authorization = req.headers.authorization.split(" ")[1];
+
+    try {
+        const decoded = jwt.verify(authorization, process.env.ACCESS_TOKEN);
+        //get name, recipes
+        FoodEntry.findById(decoded._id, (err,docs)=>{
+            if(err){
+                return res.json("server error")
+            }
+            else{
+                return res.json(docs);
+            }
+        });
+      } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: "server error" });
+      }
 })
 
 
 /* Add New Food Entry */
 app.get('/posts', authenticateToken, function(req,res,next){
     //adds a new recipe to the user's entries
+    //
     return res.json(test_post);
 })
 
