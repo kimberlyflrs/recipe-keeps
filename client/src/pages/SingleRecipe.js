@@ -19,13 +19,17 @@ class SingleRecipe extends React.Component{
         console.log(this.props.all_recipes)
     }
 
+    componentDidMount(){
+        console.log(this.props.location.state.recipe);
+    }
+
     render(){
         return(
             <div>
             <Header/>
             <Container fluid>
                 <Row>
-                    <RecipeView index={1}/>
+                    <RecipeView recipe={this.props.location.state.recipe} index={1}/>
                 </Row>
             </Container>
             </div>

@@ -13,7 +13,8 @@ class ViewAllRecipe extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            navAddRecipe: false
+            navAddRecipe: false,
+            navRecipe: false, //use this so when a card is clicked we take them to the corresponding card
         }
         this.addRecipe = this.addRecipe.bind(this);
     }
@@ -34,15 +35,16 @@ class ViewAllRecipe extends React.Component{
     }
 
     render(){
+        var content; 
         if(this.state.navAddRecipe){
             return <Redirect to="/addRecipe"/>
         }
         if(this.props.all_recipes.length === 0){
-            var content = <h2>No recipes</h2>
+            content = <h2>No recipes</h2>
         }
         else{
-            var content = this.props.all_recipes.map((x, i)=>
-            <RecipeCard key={i} title={x.name} prep={x.prep_time} index={i}/>);
+            content = this.props.all_recipes.map((x, i)=>
+            <RecipeCard key={x._id} id={x._id} recipe={x} index={i}/>);
         }
         return(
             <div>

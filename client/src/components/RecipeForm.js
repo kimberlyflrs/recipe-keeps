@@ -16,11 +16,11 @@ class RecipeForm extends React.Component{
         super(props);
         this.state = {
             recipe: props.recipe,
-            name: props.name || "",
-            prep: props.prep || "",
-            cook: props.cook || "",
-            ingridients: props.ingridients || "",
-            steps: props.step || "",
+            name: props.recipe.name || "",
+            prep: props.recipe.prep_time || "",
+            cook: props.recipe.cook_time || "",
+            ingredients: props.recipe.ingredients || "",
+            directions: props.recipe.directions || "",
     
             newRecipe: props.newRecipe,
             showModal: false,
@@ -30,6 +30,7 @@ class RecipeForm extends React.Component{
         }
         this.handleInputChange = this.handleInputChange.bind(this);
         this.mySubmitHandler = this.mySubmitHandler.bind(this);
+        this.addRecipe = this.addRecipe.bind(this);
         this.deleteRecipe = this.deleteRecipe.bind(this);
         this.showModal = this.showModal.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -43,33 +44,53 @@ class RecipeForm extends React.Component{
     }
 
     mySubmitHandler = (event) => {
+        console.log('addRecipe has been clicked');
+
         event.preventDefault();
-        if(this.state.name==="" || this.state.prep === "" || this.state.cook ==="" || this.state.prep==="" || this.state.steps ==="" || this.state.ingridients===""){
+        var name = document.forms["recipeForm"]["name"].value;
+        var prep = document.forms["recipeForm"]["prep"].value;
+        var cook = document.forms["recipeForm"]["cook"].value;
+        var ingredients = document.forms["recipeForm"]["ingredients"].value;
+        var directions = document.forms["recipeForm"]["directions"].value;
+
+        if(name==="" || prep==="" || cook==="" || ingredients==="" || directions==="" ){
             alert("Field cannot be empty");
         }
+
         else{
+            console.log('making new recipe');
+
             var newRecipe= {
-                name:this.state.name,
-                prep:this.state.prep,
-                cook: this.state.cook,
-                ingredients:this.state.ingridients,
-                directions: this.state.steps
+                name: name,
+                prep_time: prep,
+                cook_time: cook,
+                ingredients: ingredients.split("\n"),
+                directions: directions
             }
             if(this.state.newRecipe){
-                this.props.addRecipe(newRecipe); //if new call this, else call editRecipe dispatch
+                this.addRecipe(newRecipe); //if new call add recipe
             }
             else{
-                this.props.editRecipe(newRecipe, this.state.index); //if new call this, else call editRecipe dispatch
+                this.props.editRecipe(newRecipe, this.state.index); //else call editRecipe dispatch
             }
-
-            //possibly another function to add it to the database [future]
-            //redirect to view recipe page after adding
         }
       }
 
 
+    async addRecipe(recipe){
+        //adds the recipe and then redirects to all recipes
+        console.log('addRecipe has been clicked');
+        await this.props.addRecipe(recipe);
+        if(this.props.added){
+            this.backToAllRecipe()
+        }
+    }
+
+
+
     deleteRecipe(){
         this.props.deleteRecipe(this.state.index);
+        //call the delete api call here
         this.handleClose();
 
     }
@@ -97,11 +118,11 @@ class RecipeForm extends React.Component{
 
     render(){
         if(this.state.navAllRecipe){
-            return <Redirect to="viewRecipes"/>
+            return <Redirect to="/viewRecipes"/>
         }
         var buttons;
         if(this.state.newRecipe){
-            buttons = <button type="submit">Add Recipe</button>;
+            buttons = <Button type="submit">Add Recipe</Button>;
         }
         else{
             buttons = <button type="submit">Save</button>;
@@ -114,29 +135,33 @@ class RecipeForm extends React.Component{
             <h1>How a Recipe Form looks like</h1>
             </Row>
             <Button onClick={this.backToAllRecipe}>Back to All Recipes</Button>
-            <Form onSubmit={this.mySubmitHandler}>
-            <h3>Image goes here</h3>
-            <Form.Group controlId="formName">
+
+
+            <Form name="recipeForm" onSubmit={this.mySubmitHandler}>
+                <h3>Image goes here</h3>
+            <Form.Group>
             <Form.Label>Name</Form.Label>
-        <Form.Control type="text" name="name" value={this.state.name} onChange={this.handleInputChange}></Form.Control>
+                <Form.Control type="text" name="name" value={this.state.name} onChange={this.handleInputChange}></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId="formPrep">
-        <Form.Label>Prep Time:</Form.Label><Form.Control name="prep" type="text" value={this.state.prep} onChange={this.handleInputChange}></Form.Control> 
+            <Form.Group>
+                <Form.Label>Prep Time:</Form.Label>
+                <Form.Control name="prep" type="text" value={this.state.prep} onChange={this.handleInputChange}></Form.Control> 
             </Form.Group>
 
-            <Form.Group controlId="formCook">
-        <Form.Label>Cook Time:</Form.Label><Form.Control name="cook" type="text" value={this.state.cook} onChange={this.handleInputChange}></Form.Control>
+            <Form.Group>
+                <Form.Label>Cook Time:</Form.Label>
+                <Form.Control name="cook" type="text" value={this.state.cook} onChange={this.handleInputChange}></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId="formIngredients">
+            <Form.Group>
             <Form.Label>Ingredients: </Form.Label>
-        <Form.Control name="ingridients" type="text" value={this.state.ingridients} onChange={this.handleInputChange}></Form.Control>
+                <Form.Control name="ingredients" type="text" value={this.state.ingredients} onChange={this.handleInputChange}></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId="formDirections">
+            <Form.Group>
             <Form.Label>Directions</Form.Label>
-        <Form.Control name="steps" type="textarea" value={this.state.steps} onChange={this.handleInputChange}></Form.Control>
+                <Form.Control name="directions" type="textarea" value={this.state.directions} onChange={this.handleInputChange}></Form.Control>
             </Form.Group>
 
             {buttons}
@@ -180,4 +205,8 @@ const mapDispatchToProps = {
     editRecipe
 };
 
-export default connect(null,mapDispatchToProps)(RecipeForm);
+const mapStateToProps = state => ({
+    added: state.added
+})
+
+export default connect(mapStateToProps,mapDispatchToProps)(RecipeForm);

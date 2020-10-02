@@ -206,11 +206,25 @@ app.delete('/logout', function(req,res,next){
     })
 })
 
+/*app.post('/add', async function(req,res,next){
+    //adds a new recipe to the user's entries
+    const authorization = req.headers.authorization.split(" ")[1];
+    try {
+        const decoded = jwt.verify(authorization, process.env.ACCESS_TOKEN);
+        //find the user food entry, push a new recipe in their Entries and return the updated doc
+        let d = await FoodEntry.findOneAndUpdate({userId: decoded._id}, {$push: {"Entries":req.body.recipe}}, {new:true});
+        var entry = d["Entries"][d["Entries"].length-1];
+        res.send({status:true, message: "added entry", recipe: entry})
+      } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: "token error" });
+      }
+})*/
 
 
 /*Generate Acess Token */
 function generateAccessToken(user){
-    return jwt.sign({_id: user}, process.env.ACCESS_TOKEN, {expiresIn: '1m'})
+    return jwt.sign({_id: user}, process.env.ACCESS_TOKEN, {expiresIn: '50m'})
 }
 
 function authenticateToken(req, res, next){ //this would be the middleware

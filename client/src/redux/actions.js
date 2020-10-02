@@ -107,10 +107,22 @@ export const deleteAccount = () => ({
 
 
 
-export const addRecipe = (recipe) => ({
-    type: ADD_RECIPE,
-    recipe: recipe
-})
+export const addRecipe = (recipe) => async dispatch =>{
+    //adds a recipe to the entries
+    try {
+        const res = await axios.post('/add',
+        {recipe: recipe},
+        {headers: {'Content-Type': 'application/json'}}   
+        );
+        dispatch({
+            type: ADD_RECIPE,
+            payload: res.data
+        });
+    } 
+    catch (error) {
+        console.log('error caught in action.js');
+    }
+}
 
 export const deleteRecipe = (index) => ({
     type: DELETE_RECIPE,

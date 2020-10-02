@@ -24,26 +24,33 @@ class SignUp extends React.Component{
         console.log('mounted component');
     }
 
-    //make function to change login to signup
+
+
+
+
     newUser(){
+    //switches from login to signup
         this.setState({
             new_user: !(this.state.new_user)
         })
         console.log(this.state.new_user);
     }
 
-    //login
+
+
     async login(email, password){
         console.log("here it's the login function");
         await this.props.login(email,password);
         console.log(this.props.loggedIn)
         if(this.props.loggedIn){
-            this.props.userInfo();
+            this.props.userInfo();//loads the user info to redux
         }
         else{
             console.log('invalid login info')
         }
     }
+
+
 
 
     async register(email, password){

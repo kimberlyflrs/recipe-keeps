@@ -15,7 +15,7 @@ class AddRecipe extends React.Component{
             <Header/>
             <Container fluid>
                 <Row>
-                    <RecipeForm newRecipe={true}/>
+                    <RecipeForm recipe={{}} newRecipe={true}/>
                 </Row>
             </Container>
             </div>

@@ -22,17 +22,13 @@ Get Food Entries
 */
 app.get('/entries', function(req,res,next){
     //gets the food entries according to the user id
-    //parse the token and decode it
-    //look for file with that user id
-    //when found, send info back
     console.log('Getting entries');
-    console.log("req headers"+req.headers.authorization);
     const authorization = req.headers.authorization.split(" ")[1];
-
     try {
         const decoded = jwt.verify(authorization, process.env.ACCESS_TOKEN);
         //get name, recipes
-        FoodEntry.findById(decoded._id, (err,docs)=>{
+        FoodEntry.find({userid: decoded._id}, (err,docs)=>{
+            console.log(docs);
             if(err){
                 return res.json("server error")
             }
@@ -48,10 +44,20 @@ app.get('/entries', function(req,res,next){
 
 
 /* Add New Food Entry */
-app.get('/posts', authenticateToken, function(req,res,next){
+//app.get('/posts', authenticateToken, function....)
+app.post('/add', async function(req,res,next){
     //adds a new recipe to the user's entries
-    //
-    return res.json(test_post);
+    const authorization = req.headers.authorization.split(" ")[1];
+    try {
+        const decoded = jwt.verify(authorization, process.env.ACCESS_TOKEN);
+        //find the user food entry, push a new recipe in their Entries and return the updated doc
+        let d = await FoodEntry.findOneAndUpdate({userId: decoded._id}, {$push: {"Entries":req.body.recipe}}, {new:true});
+        var entry = d["Entries"][d["Entries"].length-1];
+        res.send({status:true, message: "added entry", recipe: entry})
+      } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: "token error" });
+      }
 })
 
 

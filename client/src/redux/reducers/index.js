@@ -8,43 +8,25 @@ import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, LOAD_USER, DELET
 const initialState = {
   logged_in: false,
   registered: false,
-  recipes: [{
-      name:'bread',
-      prep_time: '5:00',
-      cook_time: '30 minutes',
-      ingredients: ['flour', '3 bananas', 'walnuts'],
-      directions: ['step 1','step 2', 'step 3']
-    },
-   {
-    name:'cookies',
-    prep_time: '5:00',
-    cook_time: '30 minutes',
-    ingredients: ['flour', '3 bananas', 'walnuts'],
-    directions: ['step 1','step 2', 'step 3']
-    },
-    {
-      name:'muffin',
-      prep_time: '5:00',
-      cook_time: '30 minutes',
-      ingredients: ['flour', '3 bananas', 'walnuts'],
-      directions: ['step 1','step 2', 'step 3']
-      },
-      {
-        name:'muffin2',
-        prep_time: '5:00',
-        cook_time: '30 minutes',
-        ingredients: ['flour', '3 bananas', 'walnuts'],
-        directions: ['step 1','step 2', 'step 3']
-        }]
+  added: false,
+  recipes: []
 };
 
 
 const recipes = (state = initialState, action) =>{
   switch (action.type) {
     case ADD_RECIPE: {
-      return{
-        ...state,
-        recipes: [...state.recipes, action.recipe]
+      //if things went well true
+      if(action.payload.status){
+        return{
+          ...state,
+          added:true,
+          recipes: [...state.recipes, action.payload.recipe]
+        }       
+      }
+      else{
+        console.log("recipe error");
+        return {state}
       }
     }
 
@@ -83,6 +65,8 @@ const recipes = (state = initialState, action) =>{
 
     case LOAD_USER:{
       //sets the recipe entries into state.recipes
+      console.log("Loading user information");
+      console.log(action.payload.message);
       return {...state, recipes:action.payload.message}
     }
 

@@ -6,6 +6,7 @@ import LandingPage from './pages/LandingPage';
 import ViewAllRecipe from './pages/ViewAllRecipe';
 import AddRecipe from './pages/AddRecipe';
 import EditRecipe from './pages/EditRecipe';
+import SingleRecipe from './pages/SingleRecipe';
 
 
 /*
@@ -22,7 +23,8 @@ function App() {
         <Route exact path="/" component={LandingPage}></Route>
         <Route exact path="/addRecipe" component={AddRecipe}></Route>
         <Route exact path="/viewRecipes" component={ViewAllRecipe}></Route>
-        <Route exact path="/recipe/:editRecipe" component={EditRecipe}></Route>
+        <Route exact path="/recipe/edit/:editRecipe" render={(props) => <EditRecipe {...props}/>}></Route>
+        <Route exact path="/recipe/view/:id" render={(props) => <SingleRecipe {...props}/>}></Route>
       </Switch>
     </Router>
   );
