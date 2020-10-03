@@ -94,9 +94,12 @@ export const resume = () => async dispatch =>{
 
 
 
-export const logout = () => ({
+export const logout = () => async dispatch => (
+    //remove token
+    dispatch({
     type: LOGOUT
-})
+    })
+)
 
 
 

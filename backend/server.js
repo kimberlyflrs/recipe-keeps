@@ -67,6 +67,29 @@ Edit Food Entry
 */
 app.put('/edit', function(req,res,next){
     //edits a recipe
+    console.log(req.body);
+    const authorization = req.headers.authorization.split(" ")[1];
+    try{
+        const decoded = jwt.verify(authorization, process.env.ACCESS_TOKEN);
+        //update that specific item in array (more like replacing it)
+        FoodEntry.findOne({userId: decoded._id}, function(err,doc){
+            if(err){
+                console.log({status:false, message:"Server Error"})
+            }
+            else{
+                console.log(doc.Entries[req.body.index]);
+                doc.Entries[req.body.index] = req.body.updatedObject;
+                doc.markModified("Entries");
+                doc.save();
+                console.log(doc);
+                res.send({status:true, message:"Success Edit"})
+            }
+        })
+
+    }
+    catch(err){
+        console.log("token errors");
+    }
 })
 
 
@@ -76,6 +99,25 @@ Delete Food Entry
 */
 app.delete('/delete', function(req,res,next){
     //deletes a food entry
+    //gets the user from the token, searches for entry with that id
+    console.log(req.body.id);
+    const authorization = req.headers.authorization.split(" ")[1];
+    try{
+        const decoded = jwt.verify(authorization, process.env.ACCESS_TOKEN);
+        FoodEntry.updateOne({userId: decoded._id}, {$pull:{"Entries": {_id: req.body.id}}}, {safe:true, multi:true}, function(err, object){
+            if(err){
+                res.send({status:false, message:"Error while updating/Server Error"});
+            }
+            else{
+                console.log(object)
+                res.send({status:true, message:"success in deleting"});
+            }
+        });
+    }
+    catch(err){
+        res.send({status:false, message:"error with token"});
+        }
+
 })
 
 function authenticateToken(req, res, next){ //this would be the middleware

@@ -89,7 +89,7 @@ class RecipeForm extends React.Component{
 
 
     deleteRecipe(){
-        this.props.deleteRecipe(this.state.index);
+        this.props.deleteRecipe(this.state.recipe._id); //pass entry id
         //call the delete api call here
         this.handleClose();
 

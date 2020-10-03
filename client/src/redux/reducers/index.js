@@ -1,4 +1,4 @@
-import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, LOAD_USER, DELETE_ACCOUNT, SIGNUP, LOAD_INFO } from "../actionType";
+import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, LOAD_USER, DELETE_ACCOUNT, SIGNUP } from "../actionType";
 
 //login switches to true, adds user info into the state
 //login switches to false, gets rid of all user info
@@ -62,6 +62,15 @@ const recipes = (state = initialState, action) =>{
         return {state}
       }
     }
+
+
+    case LOGOUT:{
+        //remove the token, sets all user info blank
+        localStorage.removeItem("token");
+        return {...state, logged_in:false, registered: false, added:false, recipes:[]}
+    }
+
+  
 
     case LOAD_USER:{
       //sets the recipe entries into state.recipes
