@@ -20,10 +20,6 @@ class SignUp extends React.Component{
         this.myRegisterSubmit = this.myRegisterSubmit.bind(this);
     }
 
-    componentDidMount(){
-        console.log('mounted component');
-    }
-
 
 
 
@@ -43,7 +39,7 @@ class SignUp extends React.Component{
         await this.props.login(email,password);
         console.log(this.props.loggedIn)
         if(this.props.loggedIn){
-            this.props.userInfo();//loads the user info to redux
+            await this.props.userInfo();//loads the user info to redux
         }
         else{
             console.log('invalid login info')

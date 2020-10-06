@@ -1,9 +1,4 @@
-import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, LOAD_USER, DELETE_ACCOUNT, SIGNUP } from "../actionType";
-
-//login switches to true, adds user info into the state
-//login switches to false, gets rid of all user info
-
-//AXIOS DOES NOT GO HERE, DATA WILL BE RECEIVED FROM THE PAYLOAD
+import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, LOAD_USER, SIGNUP } from "../actionType";
 
 const initialState = {
   logged_in: false,
@@ -39,9 +34,6 @@ const recipes = (state = initialState, action) =>{
 
     case EDIT_RECIPE:{
       //look at the recipe, slice at that point, concat previous point with edit point with end point
-      console.log('editing');
-      console.log(action.recipe);
-      console.log(state.recipes);
       return{
         ...state,
         recipes: state.recipes.slice(action.index-1, action.index).concat(action.recipe).concat(state.recipes.slice(action.index+1))
@@ -51,7 +43,6 @@ const recipes = (state = initialState, action) =>{
 
     case LOGIN:{
       if(action.payload.status){
-        console.log('success');
         //set the token
         localStorage.setItem("token", action.payload.acessToken);
         console.log("token has been set "+action.payload.acessToken);
@@ -74,8 +65,6 @@ const recipes = (state = initialState, action) =>{
 
     case LOAD_USER:{
       //sets the recipe entries into state.recipes
-      console.log("Loading user information");
-      console.log(action.payload.message);
       return {...state, recipes:action.payload.message}
     }
 

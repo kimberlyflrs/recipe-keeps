@@ -1,9 +1,8 @@
-import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, DELETE_ACCOUNT, LOAD_USER, LOAD_INFO, SIGNUP} from './actionType';
+import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, DELETE_ACCOUNT, LOAD_USER, SIGNUP} from './actionType';
 import axios from 'axios';
 import setAuth from '../utils/setAuth.js';
 
 function auth(){
-
     setAuth(localStorage.token);
 }
 
@@ -12,7 +11,7 @@ export const userInfo = () => async dispatch =>{
     //loads the user info (name, food entries)
     console.log('we are getting the user info rn');
     try{
-        const res =  await axios.get('/login', 
+        const res =  await axios.get('/api/foodentries/entries', 
         {headers: {
             'Content-Type': 'application/json'}
         });
@@ -29,10 +28,8 @@ export const userInfo = () => async dispatch =>{
 
 
 export const login = (email, password) => async dispatch =>{
-    //checks if there is a user with that credential
-
     try {
-        const res = await axios.post('/login', 
+        const res = await axios.post('/api/auth/login', 
         {"email": email,
          "password": password},
         {headers: {'Content-Type': 'application/json'}}   
@@ -54,9 +51,8 @@ export const login = (email, password) => async dispatch =>{
 
 export const signup = (email, password) => async dispatch =>{
     //checks if there is a user with that credential
-
     try {
-        const res = await axios.post('/signup', 
+        const res = await axios.post('/api/auth/signup', 
         {"email": email,
          "password": password},
         {headers: {'Content-Type': 'application/json'}}   
@@ -77,7 +73,7 @@ export const resume = () => async dispatch =>{
     //checks if there is a user with that credential
 
     try {
-        const res = await axios.post('/verify',
+        const res = await axios.post('/api/auth/verify',
         {headers: {'Content-Type': 'application/json'}}   
         );
         dispatch({
@@ -113,7 +109,7 @@ export const deleteAccount = () => ({
 export const addRecipe = (recipe) => async dispatch =>{
     //adds a recipe to the entries
     try {
-        const res = await axios.post('/add',
+        const res = await axios.post('/api/foodentries/add',
         {recipe: recipe},
         {headers: {'Content-Type': 'application/json'}}   
         );
@@ -127,13 +123,41 @@ export const addRecipe = (recipe) => async dispatch =>{
     }
 }
 
-export const deleteRecipe = (index) => ({
-    type: DELETE_RECIPE,
-    index: index
-})
 
-export const editRecipe = (recipe, index) => ({
-    type: EDIT_RECIPE,
-    recipe:recipe,
-    index: index
-})
+//TEST THIS OUT
+export const deleteRecipe = (id, index) => async dispatch =>{
+    try{
+        const res = await axios.post('/api/foodentries/delete',
+        {id: id},
+        {headers: {'Content-Type': 'application/json'}},        
+        );
+        dispatch({
+            type: DELETE_RECIPE,
+            index: index,
+            message: res
+            })
+    }
+    catch(error){
+        console.log(error);
+    }
+}
+
+
+//TEST THIS OUT
+export const editRecipe = (recipe, index) => async dispatch =>{
+    try{
+        const res = await axios.put('/api/foodentries/edit',
+        {index: index,
+        updatedObject: recipe},
+        {headers: {'Content-Type': 'application/json'}}        
+        )
+        dispatch({type: EDIT_RECIPE,
+            recipe:recipe,
+            index: index,
+            message: res
+        })
+    }
+    catch(error){
+        console.log(error);
+    }
+}

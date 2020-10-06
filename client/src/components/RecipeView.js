@@ -50,7 +50,7 @@ class RecipeView extends React.Component{
 
         if(this.state.edit){
             var link = "/recipe/edit/"+this.recipe._id
-            return <Redirect to={{pathname: link, state:{recipe: this.recipe}} }/>
+            return <Redirect to={{pathname: link, state:{recipe: this.recipe, index:this.index}} }/>
         }
 
 

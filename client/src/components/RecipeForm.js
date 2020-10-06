@@ -24,13 +24,14 @@ class RecipeForm extends React.Component{
     
             newRecipe: props.newRecipe,
             showModal: false,
-            index: this.props.index,
+            index: props.index,
 
             navAllRecipe:false
         }
         this.handleInputChange = this.handleInputChange.bind(this);
         this.mySubmitHandler = this.mySubmitHandler.bind(this);
         this.addRecipe = this.addRecipe.bind(this);
+        this.editRecipe = this.editRecipe.bind(this);
         this.deleteRecipe = this.deleteRecipe.bind(this);
         this.showModal = this.showModal.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -71,7 +72,7 @@ class RecipeForm extends React.Component{
                 this.addRecipe(newRecipe); //if new call add recipe
             }
             else{
-                this.props.editRecipe(newRecipe, this.state.index); //else call editRecipe dispatch
+                this.editRecipe(newRecipe, this.state.index); //else call editRecipe dispatch
             }
         }
       }
@@ -86,12 +87,22 @@ class RecipeForm extends React.Component{
         }
     }
 
+    async editRecipe(recipe, index){
+        //edits the recipe and then redirects to all recipes
+        console.log('addRecipe has been clicked');
+        await this.props.editRecipe(recipe,index);
+        if(this.props.added){
+            this.backToAllRecipe()
+        }
+    }
 
-
-    deleteRecipe(){
-        this.props.deleteRecipe(this.state.recipe._id); //pass entry id
+    async deleteRecipe(){
+        console.log(this.state.recipe._id);
+        await this.props.deleteRecipe(this.state.recipe._id, this.state.index); //pass entry id
         //call the delete api call here
         this.handleClose();
+        //navigate to viewallrecipes
+        this.backToAllRecipe();
 
     }
 

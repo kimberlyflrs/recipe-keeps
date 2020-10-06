@@ -7,6 +7,7 @@ import ViewAllRecipe from './pages/ViewAllRecipe';
 import AddRecipe from './pages/AddRecipe';
 import EditRecipe from './pages/EditRecipe';
 import SingleRecipe from './pages/SingleRecipe';
+import PrivateRoute from './components/PrivateRoute';
 
 
 /*

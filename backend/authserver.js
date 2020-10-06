@@ -2,11 +2,10 @@
 //if a user cannot make a call call the token endpoint to refresh.
 //refresh token only good until revoked, i may give it an expiration of a day or 2var express = require('express');
 var express = require('express');
-var app = express();
+var app = express.Router();
 const jwt = require('jsonwebtoken');
 require("dotenv/config");
 
-const mongoose = require('mongoose');
 
 const User = require("./models/User");
 const FoodEntry = require("./models/FoodEntry");
@@ -21,13 +20,6 @@ function middleware(req, res, next){
 }
 
 app.use(middleware);
-
-//makes json legible
-app.use(express.json());
-
-app.get('/', function(req,res){
-    res.send('hello!!');
-})
 
 
 /*
@@ -124,9 +116,7 @@ Login GET
 */
 app.get('/login', function(req, res, next){ 
     console.log('Getting user info through /login route');
-    console.log("req headers"+req.headers.authorization);
     const authorization = req.headers.authorization.split(" ")[1];
-
     try {
         const decoded = jwt.verify(authorization, process.env.ACCESS_TOKEN);
         console.log(decoded);
@@ -206,25 +196,10 @@ app.delete('/logout', function(req,res,next){
     })
 })
 
-/*app.post('/add', async function(req,res,next){
-    //adds a new recipe to the user's entries
-    const authorization = req.headers.authorization.split(" ")[1];
-    try {
-        const decoded = jwt.verify(authorization, process.env.ACCESS_TOKEN);
-        //find the user food entry, push a new recipe in their Entries and return the updated doc
-        let d = await FoodEntry.findOneAndUpdate({userId: decoded._id}, {$push: {"Entries":req.body.recipe}}, {new:true});
-        var entry = d["Entries"][d["Entries"].length-1];
-        res.send({status:true, message: "added entry", recipe: entry})
-      } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ msg: "token error" });
-      }
-})*/
-
 
 /*Generate Acess Token */
 function generateAccessToken(user){
-    return jwt.sign({_id: user}, process.env.ACCESS_TOKEN, {expiresIn: '50m'})
+    return jwt.sign({_id: user}, process.env.ACCESS_TOKEN, {expiresIn: '2m'})
 }
 
 function authenticateToken(req, res, next){ //this would be the middleware
@@ -242,11 +217,5 @@ function authenticateToken(req, res, next){ //this would be the middleware
     })
 }
 
-mongoose.connect(
-    process.env.DB_CONNECTION_STRING,
-    { useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true },
-    function(req,res){
-        console.log("Connected to the DB");
-});
 
-app.listen(5000, process.env.IP, ()=> console.log('starting server'));
+module.exports=app;

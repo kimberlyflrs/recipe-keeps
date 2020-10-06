@@ -44,7 +44,8 @@ class ViewAllRecipe extends React.Component{
         }
         else{
             content = this.props.all_recipes.map((x, i)=>
-            <RecipeCard key={x._id} id={x._id} recipe={x} index={i}/>);
+            <RecipeCard key={x._id} id={x._id} recipe={x} index={i}/>); //key must be unique error
+            console.log(content);
         }
         return(
             <div>

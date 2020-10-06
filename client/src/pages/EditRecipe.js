@@ -21,7 +21,7 @@ class EditRecipe extends React.Component{
             <Header/>
             <Container fluid>
                 <Row>
-                    <RecipeForm index={0} newRecipe={false} recipe={this.props.location.state.recipe}/>
+                    <RecipeForm index={this.props.location.state.index} newRecipe={false} recipe={this.props.location.state.recipe}/>
                 </Row>
             </Container>
             </div>
