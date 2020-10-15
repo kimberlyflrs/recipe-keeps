@@ -28,12 +28,12 @@ class Header extends React.Component{
 
     render(){
         if(this.state.toLanding){
-            return <Redirect to="/"/>
+            return <Redirect to="/landing"/>
         }
         if(!this.props.logged_in){
             return(
-                <Navbar className="sticky-top" bg="light" expand="lg">
-                <Navbar.Brand href="#home">Recipe Keeps</Navbar.Brand>
+                <Navbar className="sticky-top nav">
+                <Navbar.Brand className="header">Recipe Keeps</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ml-auto">
@@ -44,11 +44,12 @@ class Header extends React.Component{
             )
         }
         return(
-            <Navbar className="sticky-top" bg="light" expand="lg">
+            <Navbar className="sticky-top nav" expand="lg">
             <Navbar.Brand href="#home">Recipe Keeps</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="ml-auto">
+                <Nav.Link href="/viewRecipes">Recipes</Nav.Link>
                 <Nav.Link href="#home" onClick={this.logout}>Log Out</Nav.Link>
                 </Nav>
             </Navbar.Collapse>

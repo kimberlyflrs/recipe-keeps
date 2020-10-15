@@ -1,6 +1,115 @@
-.form{
-  margin: 0 40px;
+@import '~bootstrap/dist/css/bootstrap.css';
+@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Roboto&display=swap');
+
+html,body{
+  background-color: #F0EDE1;
+  height: 100%;
+}
+
+/*Navigation bar*/
+.nav{
+  background-color: #DDDACB;
+  padding: 5vh 0;
+}
+
+/*Landing page (Sign Up and Log In) */
+.landingsection{
+  text-align:center;
+  color:white;
+  background-image: url(./images/Cooking-Home-Collection.jpg);
+  background-repeat: repeat-y;
+  padding: 40vh 0;
+  height:90vh;
+}
+
+.lsbg{
+  background-color: rgba(47, 62, 70, .5);
+  padding: 15px;
+}
+
+.landingElement{
+  padding-bottom: 5vh;
+}
+
+.footer{
+  background-color:#DDDACB ;
+  padding: 2vh 0;
+  width:100%;  
+  bottom:0;
 }
 
 
+.parent{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+}
+
+
+
+.verticalAlign{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.form{
+  margin: 0 12vh;
+  text-align: center;
+}
+
+h1{
+  text-decoration: underline #CC5A71;
+}
+
+h1, .header{
+  text-align: center;
+  font-family: 'Abril Fatface', cursive;
+}
+
+Form.Label{
+  font-family: 'Abril Fatface', cursive;
+}
+
+.btn-create, .btn-login{
+  background-color:#7899D4;
+  color:white;
+  margin: 20px 0;
+}
+
+
+.card{
+  margin: 10px 50px;
+  text-align: center;
+}
+
+.center{
+  text-align: center;
+}
+
+
+@media (min-width: 768px) {
+  .nav, .padding{
+    padding: 0 80px;
+  }
+
+}
+
+@media (max-width: 768px) {
+  .nav, .padding{
+    padding: 0 40px;
+  }
+
+ .landingsection{
+    display:none;
+  }
+
+  .parent{
+    padding: 10vh 0;
+    height:100%;
+  }
+
+}
 

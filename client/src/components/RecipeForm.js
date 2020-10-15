@@ -82,7 +82,8 @@ class RecipeForm extends React.Component{
         //adds the recipe and then redirects to all recipes
         console.log('addRecipe has been clicked');
         await this.props.addRecipe(recipe);
-        if(this.props.added){
+        if(this.props.added){//check for an error instead (if successful, or token expired attempt back to all recipe)
+            //if server error [show the error] on the page so enable it
             this.backToAllRecipe()
         }
     }

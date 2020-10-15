@@ -4,6 +4,7 @@ import Header from '../components/Header.js';
 import RecipeView from '../components/RecipeView.js';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 
 //for each item, make a recipe card
@@ -27,9 +28,11 @@ class SingleRecipe extends React.Component{
         return(
             <div>
             <Header/>
-            <Container fluid>
+            <Container fluid className="padding center">
                 <Row>
+                <Col xs={12} sm={12} m={12} lg={12}>
                     <RecipeView recipe={this.props.location.state.recipe} index={1}/>
+                </Col>
                 </Row>
             </Container>
             </div>

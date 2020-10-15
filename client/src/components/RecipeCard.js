@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import {Redirect} from 'react-router-dom';
+import Holder from './holder.svg';
 
 
 class RecipeCard extends React.Component{
@@ -27,7 +28,7 @@ class RecipeCard extends React.Component{
     }
 
     componentDidMount(){
-        console.log(this.recipe);
+        //console.log(this.recipe);
     }
 
 
@@ -39,11 +40,10 @@ class RecipeCard extends React.Component{
 
 
         return(
-        <Card bg="light" style={{width: '18rem'}}>
+        <Card bg="light" style={{width: '18rem'}} className="card">
+            <Card.Img variant="top" src={Holder} />
             <Card.Body>
-                <Card.Img variant="top" src=""/>
                 <Card.Title>{this.recipe.name}</Card.Title>
-                <Card.Text>Prep Time: {this.recipe.prep_time}</Card.Text>
                 <Button onClick={this.goToRecipe}>View Recipe</Button>
             </Card.Body>
         </Card>

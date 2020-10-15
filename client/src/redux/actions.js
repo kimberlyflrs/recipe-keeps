@@ -1,15 +1,19 @@
-import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, DELETE_ACCOUNT, LOAD_USER, SIGNUP} from './actionType';
+import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, DELETE_ACCOUNT, LOAD_USER, SIGNUP, VERIFY} from './actionType';
 import axios from 'axios';
 import setAuth from '../utils/setAuth.js';
 
+//if token expires, remove authentication and remove token [dispatch logout]
+
 function auth(){
     setAuth(localStorage.token);
+    console.log('i set the auth')
 }
 
 
 export const userInfo = () => async dispatch =>{
     //loads the user info (name, food entries)
     console.log('we are getting the user info rn');
+    auth();
     try{
         const res =  await axios.get('/api/foodentries/entries', 
         {headers: {
@@ -51,6 +55,7 @@ export const login = (email, password) => async dispatch =>{
 
 export const signup = (email, password) => async dispatch =>{
     //checks if there is a user with that credential
+    console.log('inside signup actions.js');
     try {
         const res = await axios.post('/api/auth/signup', 
         {"email": email,
@@ -68,24 +73,25 @@ export const signup = (email, password) => async dispatch =>{
     }
 }
 
+//MAY DELETE
+export const resume = () => dispatch =>{
+    //checks if crendentials are valid
+    console.log('resume');
+    const token = localStorage.getItem('token');
 
-export const resume = () => async dispatch =>{
-    //checks if there is a user with that credential
-
-    try {
-        const res = await axios.post('/api/auth/verify',
+        axios.post('/api/auth/verify',
+        {token: token},
         {headers: {'Content-Type': 'application/json'}}   
-        );
-        dispatch({
-            type: LOGIN,
-            payload: res.data
-        });
+        ).then(result=>{
+            dispatch({
+                type: VERIFY,
+                payload: result.data
+            });
+            auth();
+        }).catch(error=>{
+            console.log(error);
+        })
 
-        auth();//add authorization errors
-    } 
-    catch (error) {
-        console.log('error caught in action.js');
-    }
 }
 
 
@@ -134,7 +140,7 @@ export const deleteRecipe = (id, index) => async dispatch =>{
         dispatch({
             type: DELETE_RECIPE,
             index: index,
-            message: res
+            payload: res.data
             })
     }
     catch(error){
@@ -154,7 +160,7 @@ export const editRecipe = (recipe, index) => async dispatch =>{
         dispatch({type: EDIT_RECIPE,
             recipe:recipe,
             index: index,
-            message: res
+            payload: res.data
         })
     }
     catch(error){

@@ -5,6 +5,8 @@ import Col from 'react-bootstrap/Col';
 
 import Button from 'react-bootstrap/Button';
 import {Redirect} from 'react-router-dom';
+import Holder from './holder.svg';
+
 
 
 class RecipeView extends React.Component{
@@ -18,14 +20,6 @@ class RecipeView extends React.Component{
         }
         this.allRecipes = this.allRecipes.bind(this);
         this.editRecipe = this.editRecipe.bind(this);
-    }
-
-    //we get to this page from ViewAllRecipe and view recipe is clicked from one of the cards
-    //when edit recipe button is clicked, we navigate to EditRecipe.js
-    //we should pass the index to it from here
-
-    componentDidMount(){
-        console.log("recipe view");
     }
 
     allRecipes(){
@@ -55,17 +49,24 @@ class RecipeView extends React.Component{
 
 
         return(
-        <div className="form recipeView">
-            <h1>What a Recipe view will look like</h1>
+        <div className="form">
             <Row>
-                <Col><Button onClick={this.allRecipes}>Back to All Recipes</Button></Col>
-                <Col><Button onClick={this.editRecipe}>Edit Recipe</Button></Col>
+            <Col xs={6} sm={6} m={6} lg={6}>
+                <Button onClick={this.allRecipes}>Back to All Recipes</Button>
+            </Col>
+            <Col xs={6} sm={6} m={6} lg={6}>                    
+                <Button onClick={this.editRecipe}>Edit Recipe</Button>
+            </Col>
             </Row>
-            <h3>Image goes here</h3>
             <h1>{this.props.recipe.name}</h1>
+            <img src={Holder} alt="recipe"/>
             <Row>
-        <Col><h3>Prep Time: {this.props.recipe.prep_time}</h3></Col>
-        <Col><h3>Cook Time: {this.props.recipe.cook_time}</h3></Col>
+            <Col xs={6} sm={6} m={6} lg={6}>
+                <h3>Prep Time: {this.props.recipe.prep_time}</h3>
+            </Col>
+            <Col xs={6} sm={6} m={6} lg={6}>
+                <h3>Cook Time: {this.props.recipe.cook_time}</h3>
+            </Col>
             </Row>
             <h3>Ingredients: </h3>
             <p>{this.props.recipe.ingredients}</p>

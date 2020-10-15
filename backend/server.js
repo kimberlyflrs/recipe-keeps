@@ -18,10 +18,10 @@ app.get('/entries', authenticateToken, function(req,res,next){
         //get name, recipes
         FoodEntry.find({userId: decoded._id}, (err,docs)=>{
             if(err){
-                return res.send({status:false, message:"server error"});
+                return res.send({status:500, message:"Error: Server error"});
             }
             else{
-                return res.send({status:true, message: docs[0]['Entries']});
+                return res.send({status:200, message: docs[0]['Entries']});
             }
         });
       } catch (err) {
@@ -41,10 +41,9 @@ app.post('/add', authenticateToken, async function(req,res,next){
         //find the user food entry, push a new recipe in their Entries and return the updated doc
         let d = await FoodEntry.findOneAndUpdate({userId: decoded._id}, {$push: {"Entries":req.body.recipe}}, {new:true});
         var entry = d["Entries"][d["Entries"].length-1];
-        res.send({status:true, message: "added entry", recipe: entry})
+        res.send({status:200, message: "added entry", recipe: entry})
       } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ msg: "token error" });
+        res.status(401).json({ message: "Error: token error" });
       }
 })
 
@@ -62,7 +61,7 @@ app.put('/edit', authenticateToken, function(req,res,next){
         //update that specific item in array (more like replacing it)
         FoodEntry.findOne({userId: decoded._id}, function(err,doc){
             if(err){
-                console.log({status:false, message:"Server Error"})
+                res.send({status:500, message:"Error: Server Error"});
             }
             else{
                 console.log(doc.Entries[req.body.index]);
@@ -70,13 +69,14 @@ app.put('/edit', authenticateToken, function(req,res,next){
                 doc.markModified("Entries");
                 doc.save();
                 console.log(doc);
-                res.send({status:true, message:"Success Edit"})
+                res.send({status:200, message:"Success Edit"});
             }
         })
 
     }
     catch(err){
         console.log("token errors");
+        res.send({status:401, message:"Error: Token Error"});
     }
 })
 
@@ -94,16 +94,16 @@ app.post('/delete', authenticateToken, function(req,res,next){
         const decoded = jwt.verify(authorization, process.env.ACCESS_TOKEN);
         FoodEntry.updateOne({userId: decoded._id}, {$pull:{"Entries": {_id: req.body.id}}}, {safe:true, multi:true}, function(err, object){
             if(err){
-                res.send({status:false, message:"Error while updating/Server Error"});
+                res.send({status:500, message:"Error: updating/Server Error"});
             }
             else{
                 console.log(object)
-                res.send({status:true, message:"success in deleting"});
+                res.send({status:200, message:"success in deleting"});
             }
         });
     }
     catch(err){
-        res.send({status:false, message:"error with token"});
+        res.send({status:401, message:"Error: token"});
         }
 
 })
@@ -112,11 +112,11 @@ function authenticateToken(req, res, next){ //this would be the middleware
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
     if(token === null){
-        return res.send({status:false, message:'No Token'})
+        return res.send({status:401, message:'Error: No Token'})
     }
     jwt.verify(token, process.env.ACCESS_TOKEN, (err,user)=>{
         if(err){
-            return res.send({status:false, message:'Invalid'})//token expired
+            return res.send({status:401, message:'Error: Token Invalid'})//token expired
         }
         req.user=user;
         next();

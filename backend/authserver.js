@@ -12,16 +12,6 @@ const FoodEntry = require("./models/FoodEntry");
 const RefreshToken = require("./models/RefreshToken");
 
 
-//custom middleware
-//do checking for token, is logged in
-function middleware(req, res, next){
-    console.log('here is my middleware');
-    next();
-}
-
-app.use(middleware);
-
-
 /*
 Sign Up
 */
@@ -35,13 +25,13 @@ app.post('/signup', function(req, res, next){
     User.find({email: email}, (err, docs)=>{
         if(err){
             return res.send({
-                status:true,
+                status:500,
                 message: "Error: Server Error"
             })
         }
         else if(docs.length>0){
             return res.send({
-                status:false,
+                status:409,
                 message: "Error: Account Exists"
             })
         }
@@ -55,10 +45,10 @@ app.post('/signup', function(req, res, next){
                 try{
                     myuser.save();
                     fooddb.save();
-                    return res.send({status:true, message: "Successful registration"});
+                    return res.send({status:200, message: "Successful registration"});
                 }
                 catch(err){
-                    return res.send({status:false, message:err})
+                    return res.send({status:500, message:err})
                 }
 
 
@@ -82,15 +72,15 @@ app.post('/login', function(req, res, next){
     //-------else throw an error
     User.find({email: email}, (err,docs)=>{
         if(err){
-            return res.send({status:false, message: "Error: Server Error 1"})
+            return res.send({status:500, message: "Error: Server Error 1"})
         }
         else if(docs.length == 0){
-            return res.send({status:false, message: "Error: Account does not exist"});
+            return res.send({status:404, message: "Error: Account does not exist"});
         }
         else{
             const user = docs[0];
             if(!user.validPassword(req.body['password'])){
-                return res.send({status:false, message: "Invalid Password"});
+                return res.send({status:401, message: "Error: Invalid Password"});
             }
             else{
                 const acessToken = generateAccessToken(user._id);
@@ -100,7 +90,7 @@ app.post('/login', function(req, res, next){
                 newRT.token = refreshToken;
                 newRT.save();
                 return res.send({
-                    status:true,
+                    status:200,
                     message: "Tokens created",
                     acessToken: acessToken,
                     refreshToken: refreshToken
@@ -123,10 +113,10 @@ app.get('/login', function(req, res, next){
         //get name, recipes
         FoodEntry.find({userId: decoded._id}, (err,docs)=>{
             if(err){
-                return res.send({status:false, message:"server error"});
+                return res.send({status:500, message:"server error"});
             }
             else{
-                return res.send({status:true, message: docs[0]['Entries']});
+                return res.send({status:200, message: docs[0]['Entries']});
             }
         });
       } catch (err) {
@@ -148,7 +138,7 @@ app.post('/token', function(req, res, next){
     }
     RefreshToken.find({token: refreshToken}, (err,docs)=>{
         if(err){
-            return res.send({message: "Error: Server Error"})
+            return res.send({status:500, message: "Error: Server Error"})
         }
         else if (docs.length==0){//if refresh token not in db
             return res.send({message: "No refresh tokens"})
@@ -169,15 +159,15 @@ app.post('/token', function(req, res, next){
 
 app.post('/verify', function(req,res){
     //checks if the token is valid and not expired
-    const token = req.headers.authorization.split(" ")[1];
+    const token = req.body.token;
     jwt.verify(token, process.env.ACCESS_TOKEN, (err,user)=>{
         if(err){//token has expired
             console.log("Error here: "+ err);
-            return res.send(err);
+            return res.send({status:401, message:err});
         }
         else{//token is valid
             console.log("Valid: "+user);
-            return res.send("valid");
+            return res.send({status:200, message:"valid"});
         }
     })
 })
@@ -199,22 +189,7 @@ app.delete('/logout', function(req,res,next){
 
 /*Generate Acess Token */
 function generateAccessToken(user){
-    return jwt.sign({_id: user}, process.env.ACCESS_TOKEN, {expiresIn: '2m'})
-}
-
-function authenticateToken(req, res, next){ //this would be the middleware
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    if(token === null){
-        return res.send({status:false, message:'No Token'})
-    }
-    jwt.verify(token, process.env.ACCESS_TOKEN, (err,user)=>{
-        if(err){
-            return res.send({status:false, message:'Invalid'})//token expired
-        }
-        req.user=user;
-        next();
-    })
+    return jwt.sign({_id: user}, process.env.ACCESS_TOKEN, {expiresIn: '120m'})
 }
 
 

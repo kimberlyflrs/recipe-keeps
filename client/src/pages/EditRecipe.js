@@ -9,11 +9,6 @@ import Row from 'react-bootstrap/Row';
 
 
 class EditRecipe extends React.Component{
-    constructor(props){
-        super(props);
-        //pass the index here
-        
-    }
 
     render(){
         return(

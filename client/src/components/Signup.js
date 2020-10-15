@@ -1,6 +1,9 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 import {Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {login, signup, userInfo} from '../redux/actions';
@@ -29,7 +32,6 @@ class SignUp extends React.Component{
         this.setState({
             new_user: !(this.state.new_user)
         })
-        console.log(this.state.new_user);
     }
 
 
@@ -37,7 +39,6 @@ class SignUp extends React.Component{
     async login(email, password){
         console.log("here it's the login function");
         await this.props.login(email,password);
-        console.log(this.props.loggedIn)
         if(this.props.loggedIn){
             await this.props.userInfo();//loads the user info to redux
         }
@@ -75,7 +76,6 @@ class SignUp extends React.Component{
             alert("Field cannot be empty");
         }
         else{
-            console.log('good to go');
             this.login(email,pass);
         }
       }
@@ -110,46 +110,56 @@ class SignUp extends React.Component{
         if (this.state.new_user){
             return(
                 <div className="form">
-                    <h1>Login</h1>
+                    <h1 className="landingElement">Login</h1>
                     <Form name="loginForm" onSubmit={this.myLoginSubmit}>
-                        <Form.Group>
-                        <Form.Label>Email</Form.Label>
+                        <Form.Group as={Row}>
+                        <Form.Label column sm="2">Email</Form.Label>
+                        <Col sm="10">
                         <Form.Control type="email" placeholder="Enter Email" name="email"></Form.Control>
+                        </Col>
                         </Form.Group>
 
-                        <Form.Group>
-                        <Form.Label>Password</Form.Label>
+                        <Form.Group as={Row}>
+                        <Form.Label column sm="2">Password</Form.Label>
+                        <Col sm="10">
                         <Form.Control type="password" placeholder="Enter Password" name="password"></Form.Control>
+                        </Col>
                         </Form.Group>
 
-                        <Button type="submit">Login</Button>
+                        <Button className="btn-login" type="submit">Login</Button>
                     </Form>
-                    <button onClick={()=>this.newUser()}>New to RecipeKeeps? Sign Up</button>
+                    <Button variant="link" onClick={()=>this.newUser()}>New to RecipeKeeps? Sign Up</Button>
                 </div>
             )
         }
         return(
             <div className="form">
-                <h1>Sign Up</h1>
+                <h1 className="landingElement">Sign Up</h1>
                 <Form name="signupForm" onSubmit={this.myRegisterSubmit}>
-                    <Form.Group>
-                    <Form.Label>Email</Form.Label>
+                    <Form.Group as={Row}>
+                    <Form.Label column sm="2">Email</Form.Label>
+                    <Col sm="10">
                     <Form.Control type="email" placeholder="Enter Email" name="email"></Form.Control>
+                    </Col>
                     </Form.Group>
 
-                    <Form.Group>
-                    <Form.Label>Password</Form.Label>
+                    <Form.Group as={Row}>
+                    <Form.Label column sm="2">Password</Form.Label>
+                    <Col sm="10">
                     <Form.Control type="password" placeholder="Enter Password" name="password"></Form.Control>
+                    </Col>
                     </Form.Group>
 
-                    <Form.Group>
-                    <Form.Label>Confirm Password</Form.Label>
+                    <Form.Group as={Row}>
+                    <Form.Label column sm="2">Confirm Password</Form.Label>
+                    <Col sm="10">
                     <Form.Control type="password" placeholder="Confirm Password" name="confirmPassword"></Form.Control>
+                    </Col>
                     </Form.Group>
 
-                    <Button type="submit">Create Account</Button>
+                    <Button variant="create" type="submit">Create Account</Button>
                 </Form>
-                <button onClick={()=>this.newUser()}>Already have an account? Login </button>
+                <Button variant="link" onClick={()=>this.newUser()}>Already have an account? Login </Button>
             </div>
 
         )

@@ -9,7 +9,7 @@ const FoodEntry = new mongoose.Schema({
         prep_time: String,
         cook_time: String,
         ingredients: Array,
-        directions: String
+        directions: String,
         }],
 });
 

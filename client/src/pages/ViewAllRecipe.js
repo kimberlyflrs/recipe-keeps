@@ -5,7 +5,10 @@ import RecipeCard from '../components/RecipeCard.js';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+
 import {Redirect} from 'react-router-dom';
+import { userInfo } from '../redux/actions.js';
 
 //add recipe button takes you to the add recipe page
 
@@ -27,13 +30,6 @@ class ViewAllRecipe extends React.Component{
         })
     }
 
-
-    componentDidMount(){
-        //assuming user is valid
-        //load all of the users information
-        console.log(this.props.all_recipes);
-    }
-
     render(){
         var content; 
         if(this.state.navAddRecipe){
@@ -50,12 +46,15 @@ class ViewAllRecipe extends React.Component{
         return(
             <div>
             <Header/>
-            <Container fluid>
+            <Container fluid className="padding">
                 <Row>
-                    <Col xs={12} sm={12} m={6} lg={6}>
+                    <Col xs={12} sm={12} m={12} lg={12}>
+                        <Button onClick={this.addRecipe}>Add Recipe</Button>
                     </Col>
-                    <Col xs={12} sm={12} m={6} lg={6}>
-                    <button onClick={this.addRecipe}>Add Recipe </button>
+                </Row>
+                <Row>
+                    <Col xs={12} sm={12} m={12} lg={12}>
+                        <h1>All Recipes</h1>
                     </Col>
                 </Row>
                 <Row>
@@ -72,7 +71,10 @@ class ViewAllRecipe extends React.Component{
 const mapStateToProps = state =>({
     all_recipes: state.recipes,
   });
-  
+
+  const mapDispatchToProps = {
+    userInfo
+};
 
 
-export default connect(mapStateToProps)(ViewAllRecipe);
+export default connect(mapStateToProps, mapDispatchToProps)(ViewAllRecipe);

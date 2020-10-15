@@ -9,4 +9,6 @@ export const LOGOUT = "LOGOUT";
 export const LOAD_USER = "LOAD_USER";
 export const SIGNUP = "SIGNUP";
 
+export const VERIFY = "VERIFY";
+
 export const DELETE_ACCOUNT = "DELETE_ACCOUNT";
