@@ -85,10 +85,10 @@ app.post('/login', function(req, res, next){
             else{
                 const acessToken = generateAccessToken(user._id);
                 const refreshToken = jwt.sign({_id: user._id}, process.env.REFRESH_TOKEN);
-                const newRT = new RefreshToken();
-                newRT.user = user._id;
-                newRT.token = refreshToken;
-                newRT.save();
+                //const newRT = new RefreshToken();
+                //newRT.user = user._id;
+                //newRT.token = refreshToken;
+                //newRT.save();
                 return res.send({
                     status:200,
                     message: "Tokens created",
@@ -189,7 +189,7 @@ app.delete('/logout', function(req,res,next){
 
 /*Generate Acess Token */
 function generateAccessToken(user){
-    return jwt.sign({_id: user}, process.env.ACCESS_TOKEN, {expiresIn: '120m'})
+    return jwt.sign({_id: user}, process.env.ACCESS_TOKEN, {expiresIn: '15m'})
 }
 
 

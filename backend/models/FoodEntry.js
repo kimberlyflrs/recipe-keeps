@@ -10,6 +10,8 @@ const FoodEntry = new mongoose.Schema({
         cook_time: String,
         ingredients: Array,
         directions: String,
+        image: String,
+        imageKey: String
         }],
 });
 
