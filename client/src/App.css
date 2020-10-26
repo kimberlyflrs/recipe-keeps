@@ -9,14 +9,14 @@ html,body{
 /*Navigation bar*/
 .nav{
   background-color: #DDDACB;
-  padding: 5vh 0;
 }
 
-/*Landing page (Sign Up and Log In) */
+/*Landing page (Sign Up and Log In) 
+  background-image: url(./images/Cooking-Home-Collection.jpg);
+*/
 .landingsection{
   text-align:center;
   color:white;
-  background-image: url(./images/Cooking-Home-Collection.jpg);
   background-repeat: repeat-y;
   padding: 40vh 0;
   height:90vh;
@@ -56,12 +56,11 @@ html,body{
 }
 
 .form{
-  margin: 0 12vh;
-  text-align: center;
+  margin: 0 10vh;
 }
 
 h1{
-  text-decoration: underline #CC5A71;
+  text-decoration: underline #7899D4;
 }
 
 h1, .header{
@@ -69,19 +68,51 @@ h1, .header{
   font-family: 'Abril Fatface', cursive;
 }
 
-Form.Label{
+.title{
   font-family: 'Abril Fatface', cursive;
 }
 
-.btn-create, .btn-login{
+.row-space{
+  padding: 20px 0;
+}
+
+.landing-space{
+  padding-top: 5vh;
+}
+
+.left-text{
+  text-align: left;
+}
+
+.recipe-bg{
+  background-color: white;
+  margin-bottom: 50px;
+}
+
+.center-image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.btn-create, .btn-login, .btn-edit, .btn-bblue{
   background-color:#7899D4;
   color:white;
   margin: 20px 0;
 }
 
+.btn-delete{
+  margin:20px 0;
+}
+
+.right{
+  text-align: right;
+}
+
 
 .card{
-  margin: 10px 50px;
+  margin: 5vh;
   text-align: center;
 }
 
@@ -89,18 +120,42 @@ Form.Label{
   text-align: center;
 }
 
+.error{
+  color:red;
+  font-weight: bold;
+}
+
+.spacing{
+  margin: 5vh 0;
+}
+
+ul{
+  list-style-position:inside
+}
+
+.responsive{
+  height: auto;
+  max-width:80%;
+  text-align:center;
+}
+
+.recipe-image{
+  max-width: 200px;
+  height: auto;
+}
+
 
 @media (min-width: 768px) {
   .nav, .padding{
-    padding: 0 80px;
+    padding: 0 15%;
   }
-
 }
 
 @media (max-width: 768px) {
   .nav, .padding{
-    padding: 0 40px;
+    padding: 0 15px;
   }
+
 
  .landingsection{
     display:none;
@@ -109,6 +164,10 @@ Form.Label{
   .parent{
     padding: 10vh 0;
     height:100%;
+  }
+
+  .center2{
+    margin: 0 auto;
   }
 
 }

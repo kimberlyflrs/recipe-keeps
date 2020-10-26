@@ -1,6 +1,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import Header from '../components/Header.js';
+
+import Footer from '../components/Footer.js';
 import RecipeView from '../components/RecipeView.js';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -22,6 +24,7 @@ class SingleRecipe extends React.Component{
 
     componentDidMount(){
         console.log(this.props.location.state.recipe);
+        console.log("recipe index: "+ this.props.location.state.index);
     }
 
     render(){
@@ -31,10 +34,11 @@ class SingleRecipe extends React.Component{
             <Container fluid className="padding center">
                 <Row>
                 <Col xs={12} sm={12} m={12} lg={12}>
-                    <RecipeView recipe={this.props.location.state.recipe} index={1}/>
+                    <RecipeView recipe={this.props.location.state.recipe} index={this.props.location.state.index}/>
                 </Col>
                 </Row>
             </Container>
+            <Footer/>
             </div>
         )
     }
@@ -44,6 +48,7 @@ class SingleRecipe extends React.Component{
 
 const mapStateToProps = state =>({
     all_recipes: state.recipes,
+    logged_in: state.logged_in
   });
   
 

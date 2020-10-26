@@ -13,7 +13,7 @@ class LandingPage extends React.Component{
         return(
             <div>
             <Header/>
-            <Container fluid>
+            <Container fluid className="padding">
                 <Row>
                     <Col xs={12} sm={12} m={6} lg={6} className="landingsection verticalAlign">
                         <div className="lsbg">

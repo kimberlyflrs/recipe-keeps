@@ -3,6 +3,8 @@ import Header from '../components/Header.js';
 import RecipeForm from '../components/RecipeForm.js';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Footer from '../components/Footer.js';
 
 
 
@@ -13,11 +15,14 @@ class AddRecipe extends React.Component{
         return(
             <div>
             <Header/>
-            <Container fluid>
+            <Container fluid className="padding center">
                 <Row>
+                    <Col>
                     <RecipeForm recipe={{}} newRecipe={true}/>
+                    </Col>
                 </Row>
             </Container>
+            <Footer/>
             </div>
         )
     }

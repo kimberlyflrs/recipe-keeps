@@ -1,36 +1,16 @@
-import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, DELETE_ACCOUNT, LOAD_USER, SIGNUP, VERIFY} from './actionType';
+import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, DELETE_ACCOUNT, LOAD_USER, SIGNUP, VERIFY, IS_LOADING, ERROR} from './actionType';
 import axios from 'axios';
 import setAuth from '../utils/setAuth.js';
 
-//if token expires, remove authentication and remove token [dispatch logout]
-
 function auth(){
     setAuth(localStorage.token);
-    console.log('i set the auth')
 }
 
+/*
+* User login and sign up
+*/
 
-export const userInfo = () => async dispatch =>{
-    //loads the user info (name, food entries)
-    console.log('we are getting the user info rn');
-    auth();
-    try{
-        const res =  await axios.get('/api/foodentries/entries', 
-        {headers: {
-            'Content-Type': 'application/json'}
-        });
-        dispatch({
-            type: LOAD_USER,
-            payload: res.data
-            });
-    }
-    catch(err){
-            console.log(err);
-    } 
-}
-
-
-
+//Login
 export const login = (email, password) => async dispatch =>{
     try {
         const res = await axios.post('/api/auth/login', 
@@ -42,20 +22,21 @@ export const login = (email, password) => async dispatch =>{
             type: LOGIN,
             payload: res.data
         });
-
         auth();//add authorization
     } 
     catch (error) {
-        console.log('error caught in action.js');
+        //add error dispatch
+        dispatch({
+            type: ERROR,
+            payload: "Cannot Login At This Time. Try Again."
+        })
     }
 }
 
 
 
-
+//Sign up for new user
 export const signup = (email, password) => async dispatch =>{
-    //checks if there is a user with that credential
-    console.log('inside signup actions.js');
     try {
         const res = await axios.post('/api/auth/signup', 
         {"email": email,
@@ -66,20 +47,32 @@ export const signup = (email, password) => async dispatch =>{
             type: SIGNUP,
             payload: res.data
         });
-
     } 
     catch (error) {
+        //dispatch error
         console.log('error caught in action.js');
+        dispatch({
+            type: ERROR,
+            payload: "Cannot Signup At This Time. Try Again."
+        })
     }
 }
 
-//MAY DELETE
+
+
+
+/*
+* User info and verification
+*/
+
+
+
+//Checks if token is valid
 export const resume = () => dispatch =>{
     //checks if crendentials are valid
     console.log('resume');
     const token = localStorage.getItem('token');
-
-        axios.post('/api/auth/verify',
+    axios.post('/api/auth/verify',
         {token: token},
         {headers: {'Content-Type': 'application/json'}}   
         ).then(result=>{
@@ -95,30 +88,48 @@ export const resume = () => dispatch =>{
 }
 
 
+//Loads the user info
+export const userInfo = () => async dispatch =>{
+    console.log('we are getting the user info rn');
+    if(localStorage.token){
+        setAuth(localStorage.token);
+    }
+    try{
+        console.log('inside api call');
+        const res =  await axios.get('/api/foodentries/entries', 
+        {headers: {
+            'Content-Type': 'application/json'}
+        })
+        dispatch({
+            type: LOAD_USER,
+            payload: res.data
+            });
+    }
+    catch(err){
+        //dispatch erro
+        console.log(err);
+        dispatch({
+            type: ERROR,
+            payload: "Cannot Get Recipes At This Time. Try Again."
+        })
+    } 
+}
 
-export const logout = () => async dispatch => (
-    //remove token
-    dispatch({
-    type: LOGOUT
-    })
-)
 
 
 
-
-export const deleteAccount = () => ({
-    type: DELETE_ACCOUNT
-})
-
+/* 
+* MODIFYING A RECIPE SECTION
+*/
 
 
-export const addRecipe = (recipe) => async dispatch =>{
-    //adds a recipe to the entries
+//Adds an existing Recipe
+export const addRecipe = (formdata) => async dispatch =>{
     try {
         const res = await axios.post('/api/foodentries/add',
-        {recipe: recipe},
-        {headers: {'Content-Type': 'application/json'}}   
+        formdata   
         );
+        console.log(res.data);
         dispatch({
             type: ADD_RECIPE,
             payload: res.data
@@ -126,15 +137,21 @@ export const addRecipe = (recipe) => async dispatch =>{
     } 
     catch (error) {
         console.log('error caught in action.js');
+        //dispatch error here
+        dispatch({
+            type: ERROR,
+            payload: "Cannot Add Recipe At This Time. Try Again."
+        })
     }
 }
 
 
-//TEST THIS OUT
-export const deleteRecipe = (id, index) => async dispatch =>{
+//Deletes an existing Recipe
+export const deleteRecipe = (id, index, imageKey) => async dispatch =>{
     try{
         const res = await axios.post('/api/foodentries/delete',
-        {id: id},
+        {id: id,
+        imageKey: imageKey},
         {headers: {'Content-Type': 'application/json'}},        
         );
         dispatch({
@@ -145,17 +162,20 @@ export const deleteRecipe = (id, index) => async dispatch =>{
     }
     catch(error){
         console.log(error);
+        //dispatch error here
+        dispatch({
+            type: ERROR,
+            payload: "Cannot Delete Recipe At This Time. Try Again."
+        })
     }
 }
 
 
-//TEST THIS OUT
+//Edits an Existing Recipe
 export const editRecipe = (recipe, index) => async dispatch =>{
     try{
-        const res = await axios.put('/api/foodentries/edit',
-        {index: index,
-        updatedObject: recipe},
-        {headers: {'Content-Type': 'application/json'}}        
+        const res = await axios.post('/api/foodentries/edit',
+        recipe        
         )
         dispatch({type: EDIT_RECIPE,
             recipe:recipe,
@@ -165,5 +185,35 @@ export const editRecipe = (recipe, index) => async dispatch =>{
     }
     catch(error){
         console.log(error);
+        //dispatch error here
+        dispatch({
+            type: ERROR,
+            payload: "Not Able To Connect to Server At This Time. Try Again."
+        })
     }
+}
+
+
+/*
+* LOGOUT
+*/
+
+
+//Logs the user out
+export const logout = () => async dispatch => (
+    dispatch({
+    type: LOGOUT
+    })
+)
+
+
+
+/*
+* LOADING
+*/
+
+export const loading=()=>dispatch=>{
+    dispatch({
+        type: IS_LOADING
+    })
 }

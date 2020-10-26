@@ -5,7 +5,6 @@ import Col from 'react-bootstrap/Col';
 
 import Button from 'react-bootstrap/Button';
 import {Redirect} from 'react-router-dom';
-import Holder from './holder.svg';
 
 
 
@@ -38,6 +37,7 @@ class RecipeView extends React.Component{
     }
 
     render(){
+        var ingredients;
         if(this.state.viewAll){
             return <Redirect to="/viewRecipes"/>
         }
@@ -46,32 +46,53 @@ class RecipeView extends React.Component{
             var link = "/recipe/edit/"+this.recipe._id
             return <Redirect to={{pathname: link, state:{recipe: this.recipe, index:this.index}} }/>
         }
+        console.log(this.props.recipe.ingredients);
+        ingredients = this.props.recipe.ingredients.map((item,key)=>
+            <li key={key}><span>{item}</span></li>)
 
 
         return(
-        <div className="form">
+        <div>
             <Row>
             <Col xs={6} sm={6} m={6} lg={6}>
-                <Button onClick={this.allRecipes}>Back to All Recipes</Button>
+                <Button className="btn-bblue" onClick={this.allRecipes}>Back to All Recipes</Button>
             </Col>
-            <Col xs={6} sm={6} m={6} lg={6}>                    
-                <Button onClick={this.editRecipe}>Edit Recipe</Button>
-            </Col>
-            </Row>
-            <h1>{this.props.recipe.name}</h1>
-            <img src={Holder} alt="recipe"/>
-            <Row>
-            <Col xs={6} sm={6} m={6} lg={6}>
-                <h3>Prep Time: {this.props.recipe.prep_time}</h3>
-            </Col>
-            <Col xs={6} sm={6} m={6} lg={6}>
-                <h3>Cook Time: {this.props.recipe.cook_time}</h3>
+            <Col xs={6} sm={6} m={6} lg={6}>                                    
+                <Button className="btn-bblue"onClick={this.editRecipe}>Edit</Button>
             </Col>
             </Row>
-            <h3>Ingredients: </h3>
-            <p>{this.props.recipe.ingredients}</p>
-            <h3>Directions</h3>
-            <p>{this.props.recipe.directions}</p>
+            <div className="recipe-bg">
+            <Row className="row-space">
+                <Col>
+                <h1>{this.props.recipe.name}</h1>
+                </Col>
+            </Row>
+            <Row className="row-space">
+                <Col className="center-image">
+                <img className="responsive" src={this.props.recipe.image} alt="recipe"/>
+                </Col>
+            </Row>
+            <Row className="row-space">
+                <Col xs={6} sm={6} m={6} lg={6}>
+                    <h5><span className="title">Prep Time:</span> {this.props.recipe.prep_time}</h5>
+                </Col>
+                <Col xs={6} sm={6} m={6} lg={6}>
+                    <h5><span className="title">Cook Time:</span> {this.props.recipe.cook_time}</h5>
+                </Col>
+            </Row>
+            <Row className="row-space">
+                <Col xs={12} sm={12} m={12} lg={12}>
+                    <h5 className="title">Ingredients:</h5>
+                    <ul>{ingredients}</ul>
+                </Col>
+            </Row>
+            <Row className="row-space">
+                <Col xs={12} sm={12} m={12} lg={12} className="left">
+                    <h5 className="title">Directions:  </h5>
+                    <p>{this.props.recipe.directions}</p>
+                </Col>
+            </Row>
+            </div>
         </div>
 
         )

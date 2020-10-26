@@ -1,11 +1,8 @@
 import React from 'react';
 
 
-
+//Creates a footer component
 class Footer extends React.Component{
-    constructor(props){
-        super(props);
-    }
 
     render(){
         return(

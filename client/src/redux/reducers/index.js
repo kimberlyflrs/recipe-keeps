@@ -1,107 +1,72 @@
-import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, LOAD_USER, SIGNUP, VERIFY } from "../actionType";
+import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, LOAD_USER, SIGNUP, VERIFY, DELETE_ACCOUNT, ERROR, IS_LOADING } from "../actionType";
+import axios from "axios";
+
+function setAuth(token){
+  if (token) {
+    console.log('adding token: '+token);
+    axios.defaults.headers.common = {'Authorization': `bearer `+token};
+  } else {
+    console.log('deleting token: '+token);
+    delete axios.defaults.headers.common;
+  }
+};
 
 const initialState = {
   logged_in: false,
   registered: false,
   added: false,
   token: "",
-  recipes: []
+  recipes: [],
+  isLoading: false,
+  error: ""
 };
 
 
 const recipes = (state = initialState, action) =>{
   switch (action.type) {
-    case ADD_RECIPE: {
-      //if things went well true, if token expired then remove it from local storage
-      if(action.payload.status===200){
-        return{
-          ...state,
-          added:true,
-          recipes: [...state.recipes, action.payload.recipe]
-        }       
-      }
-      if(action.payload.status === 401){
-        localStorage.removeItem('token');
-        return{
-          logged_in: false,
-          registered: false,
-          added: false,
-          token:"",
-          recipes: []   
-        }
-      }
-      else{
-        console.log("recipe error");
-        return {state}
-      }
-    }
-
-    case DELETE_RECIPE:{
-      if(action.payload.status===200){
-        return{
-          ...state,
-          recipes: state.recipes.slice(action.index-1, action.index).concat(state.recipes.slice(action.index+1))
-        }
-      }
-      if(action.payload.status===401){
-        //remove fom localstorage
-        localStorage.removeItem('token');
-        return{
-          logged_in: false,
-          registered: false,
-          added: false,
-          token:"",
-          recipes: []
-        }
-      }
-    }
-
-    case EDIT_RECIPE:{
-      //look at the recipe, slice at that point, concat previous point with edit point with end point
-      if(action.payload.status===200){
-        return{
-          ...state,
-          recipes: state.recipes.slice(action.index-1, action.index).concat(action.recipe).concat(state.recipes.slice(action.index+1))
-        }
-      }
-      if(action.payload.status===401){
-        localStorage.removeItem('token');
-        return{
-          logged_in: false,
-          registered: false,
-          added: false,
-          token:"",
-          recipes: []
-        }       
-      }
-    }
-
 
     case LOGIN:{
       if(action.payload.status===200){
-        //set the token
         localStorage.setItem("token", action.payload.acessToken);
-        console.log("token has been set "+action.payload.acessToken);
-        return {...state, logged_in:true}
+        setAuth(localStorage.getItem('token'));
+        return {...state, registered:true, token:action.payload.acessToken, logged_in:true, isLoading:false, error:""}
       }
       else{
         console.log("can't login");
-        return {state}
+        return {...state, error:"Error: Invalid Login Information"}
       }
     }
 
 
+
+
+
+    case SIGNUP:{
+      if(action.payload.status===200){
+        return {...state, registered:true, error:""}
+      }
+      return {...state, error:"Error: Cannot Sign Up"}
+    }
+
+
+
+
+
     case LOGOUT:{
-        //remove the token, sets all user info blank
         localStorage.removeItem("token");
-        return {...state, logged_in:false, registered: false, added:false,token:"", recipes:[]}
+        return {...state, logged_in:false, registered: false, added:false,token:"", recipes:[], isLoading:false, error:""}
     }
 
   
 
     case LOAD_USER:{
-      //sets the recipe entries into state.recipes
-      return {...state, recipes:action.payload.message}
+      console.log('load user');
+      if(action.payload.status===200){
+        var token = localStorage.getItem('token');
+        return {...state, logged_in:true, registered: true, added:false, token:token, recipes:action.payload.message, isLoading:false, error:""}
+      }
+      localStorage.removeItem('token')
+      return {...state, logged_in:false, registered: false, added:false,token:"", recipes:[], isLoading:false, error:""}
     }
 
     case VERIFY:{
@@ -109,18 +74,90 @@ const recipes = (state = initialState, action) =>{
       const token = localStorage.getItem("token");
 
       if(action.payload.status===200){
-        return{...state, logged_in:true, registered:true, added:false, token:token}
+        return{...state, logged_in:true, registered:true, added:false, token:token, isLoading:false, error:""}
       }
-      return {...state, logged_in:false, registered: false, added:false,token:"", recipes:[]}
+      localStorage.removeItem('token');
+      return {...state, logged_in:false, registered: false, added:false,token:"", recipes:[], isLoading:false, error:""}
     }
 
-    case SIGNUP:{
-      //sets registered to true
+
+
+
+
+    case ADD_RECIPE: {
       if(action.payload.status===200){
-        return {...state, registered:true}
+        return{...state, added:true, recipes: [...state.recipes, action.payload.recipe],isLoading:false, error:""}       
       }
-      return {state}
+      if(action.payload.status === 401){
+        localStorage.removeItem('token');
+        return{...state, logged_in: false, registered: false, added: false, token:"", recipes: [], isLoading:false, error:" "}
+      }
+      else{
+        console.log("recipe error");
+        return {...state, error:"Error: Cannot Add Recipe. Try Again."}
+      }
     }
+
+
+
+
+
+    case DELETE_RECIPE:{
+      if(action.payload.status===200){
+        return{...state,recipes: state.recipes.slice(action.index-1, action.index).concat(state.recipes.slice(action.index+1)), error:""}
+      }
+      if(action.payload.status===401){
+        localStorage.removeItem('token');
+        return{...state, logged_in: false, registered: false, added: false, token:"",recipes: [],isLoading:false, error:""}
+      }
+    }
+
+
+
+
+
+    /* falls through */
+    case EDIT_RECIPE:{
+      if(action.payload.status===200){
+        return{...state,added:true, recipes: state.recipes.slice(action.index-1, action.index).concat(action.recipe).concat(state.recipes.slice(action.index+1)), isLoading:false, error:""}
+      }
+      if(action.payload.status===401){
+        localStorage.removeItem('token');
+        return{...state,logged_in: false,registered: false,added: false,token:"",recipes: [],isLoading:false, error:""}       
+      }
+    }
+
+
+
+    /* falls through */
+    case IS_LOADING:{
+      return {...state, isLoading:true}
+    }
+
+
+
+
+    case ERROR:{
+      return {...state, error:action.payload, isLoading:false}
+    }
+
+
+
+
+
+    case DELETE_ACCOUNT:{
+      if(action.payload.status===200){
+        localStorage.removeItem('token');
+        return{...state,logged_in: false,registered: false,added: false,token:"",recipes: [],isLoading:false}       
+      }
+      else{
+        return{...state}
+      }
+    }
+
+
+
+
 
     default:
       return state;
