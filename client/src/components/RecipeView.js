@@ -10,7 +10,7 @@ import {Redirect} from 'react-router-dom';
 
 class RecipeView extends React.Component{
     constructor(props){
-        super(props);
+        super();
         this.index = props.index;
         this.recipe = props.recipe;
         this.state = {

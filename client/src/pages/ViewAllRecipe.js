@@ -18,7 +18,7 @@ import { userInfo, loading } from '../redux/actions.js';
 
 class ViewAllRecipe extends React.Component{
     constructor(props){
-        super(props);
+        super();
         this.state = {
             navAddRecipe: false,
             navRecipe: false, //use this so when a card is clicked we take them to the corresponding card
@@ -31,7 +31,6 @@ class ViewAllRecipe extends React.Component{
     }
 
     async componentDidMount(){
-        console.log('view all recipe already mounted');
         this.props.loading();
         await this.props.userInfo();
     }
@@ -65,38 +64,22 @@ class ViewAllRecipe extends React.Component{
     }
 
     render(){
-        console.log('view all recipe page');
         var content; 
         if(this.state.navAddRecipe){
             return <Redirect to="/addRecipe"/>
         }
         if(!this.props.logged_in){
-            return <Redirect to="/landing"/>
+            return <Redirect to="/login"/>
         }
         if(this.props.all_recipes.length === 0){
             content = <h2>No recipes</h2>
         }
-        else{
-            if(this.state.sort){
-                content = this.props.all_recipes;
-                content.reverse();
-                console.log('new to old')
-                console.log(this.props.all_recipes);
-                content = content.map((x, i)=>
-                <div className="center2">
+
+        content = this.props.all_recipes.map((x, i)=>
+            <div className="center2">
                 <RecipeCard key={x._id} id={x._id} recipe={x} index={i} image={x.image}/>
-                </div>)
-            }
-            else{
-                console.log('old to new')
-                console.log(this.props.all_recipes);
-                content = this.props.all_recipes.map((x, i)=>
-                <div className="center2">
-                <RecipeCard key={x._id} id={x._id} recipe={x} index={i} image={x.image}/>
-                </div>
-            )   
-                content.reverse()};
-        }
+            </div>)
+
         if(this.props.isLoading){
             return(
             <div>

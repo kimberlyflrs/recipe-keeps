@@ -16,7 +16,7 @@ class EditRecipe extends React.Component{
 
     render(){
         if(!this.props.logged_in){
-            return <Redirect to="/landing"/>
+            return <Redirect to="/login"/>
         }
         return(
             <div>

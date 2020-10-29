@@ -16,7 +16,6 @@ class SignUp extends React.Component{
         this.newUser = this.newUser.bind(this);
         this.login = this.login.bind(this);
         this.register = this.register.bind(this);
-        this.myLoginSubmit = this.myLoginSubmit.bind(this);
         this.myRegisterSubmit = this.myRegisterSubmit.bind(this);
     }
 
@@ -26,11 +25,6 @@ class SignUp extends React.Component{
 
     newUser(){
     //switches from login to signup
-        document.getElementById('email').value='';
-        document.getElementById('password').value='';
-        if(this.state.new_user){
-            document.getElementById('confirmpassword').value='';
-        }
         this.setState({
             new_user: !(this.state.new_user)
         })
@@ -62,20 +56,6 @@ class SignUp extends React.Component{
 
     }
 
-    myLoginSubmit = (event) => {
-        //checks if inputs are not empty
-        event.preventDefault();
-        var email = document.forms["loginForm"]["email"].value;
-        var pass = document.forms["loginForm"]["password"].value;
-
-        if(email==="" || pass===""){
-            alert("Field cannot be empty");
-        }
-        else{
-            this.login(email,pass);
-        }
-      }
-
 
 
       myRegisterSubmit = (event) => {
@@ -101,10 +81,11 @@ class SignUp extends React.Component{
 
     render(){
         if(this.props.loggedIn){
-            console.log("it's true! let go to view recipe");
             return <Redirect to="/viewRecipes"/>
         }
-        if (this.state.new_user){
+        if(!this.state.new_user){
+            return <Redirect to="/login"/>
+        }
         return(
             <div className="form">
                 <h1 className="landingElement">Sign Up</h1>
@@ -130,30 +111,6 @@ class SignUp extends React.Component{
                 </div>
             </div>
         )
-        }
-        else{
-            return(
-                <div className="form">
-                    <h1 className="landingElement">Login</h1>
-                    <p className="center error">{this.props.error}</p>
-                    <Form name="loginForm" onSubmit={this.myLoginSubmit}>
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" placeholder="Enter Email" name="email" id="email"></Form.Control>
-
-
-                        <Form.Label className="landing-space">Password</Form.Label>
-                        <Form.Control type="password" placeholder="Enter Password" name="password" id="password"></Form.Control>
-
-                        <div className="center">
-                        <Button className="btn-login" type="submit">Login</Button>
-                        </div>
-                    </Form>
-                    <div className="center">
-                        <Button variant="link" onClick={()=>this.newUser()}>New to RecipeKeeps? Sign Up</Button>
-                    </div>
-                </div>
-            )
-        }
 
     }
 

@@ -1,4 +1,4 @@
-import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, DELETE_ACCOUNT, LOAD_USER, SIGNUP, VERIFY, IS_LOADING, ERROR} from './actionType';
+import { ADD_RECIPE, DELETE_RECIPE, EDIT_RECIPE, LOGIN, LOGOUT, LOAD_USER, SIGNUP, VERIFY, IS_LOADING, ERROR} from './actionType';
 import axios from 'axios';
 import setAuth from '../utils/setAuth.js';
 
@@ -25,7 +25,6 @@ export const login = (email, password) => async dispatch =>{
         auth();//add authorization
     } 
     catch (error) {
-        //add error dispatch
         dispatch({
             type: ERROR,
             payload: "Cannot Login At This Time. Try Again."
@@ -49,8 +48,6 @@ export const signup = (email, password) => async dispatch =>{
         });
     } 
     catch (error) {
-        //dispatch error
-        console.log('error caught in action.js');
         dispatch({
             type: ERROR,
             payload: "Cannot Signup At This Time. Try Again."
@@ -90,12 +87,10 @@ export const resume = () => dispatch =>{
 
 //Loads the user info
 export const userInfo = () => async dispatch =>{
-    console.log('we are getting the user info rn');
     if(localStorage.token){
         setAuth(localStorage.token);
     }
     try{
-        console.log('inside api call');
         const res =  await axios.get('/api/foodentries/entries', 
         {headers: {
             'Content-Type': 'application/json'}
@@ -106,8 +101,6 @@ export const userInfo = () => async dispatch =>{
             });
     }
     catch(err){
-        //dispatch erro
-        console.log(err);
         dispatch({
             type: ERROR,
             payload: "Cannot Get Recipes At This Time. Try Again."
@@ -136,8 +129,6 @@ export const addRecipe = (formdata) => async dispatch =>{
         });
     } 
     catch (error) {
-        console.log('error caught in action.js');
-        //dispatch error here
         dispatch({
             type: ERROR,
             payload: "Cannot Add Recipe At This Time. Try Again."
@@ -161,8 +152,6 @@ export const deleteRecipe = (id, index, imageKey) => async dispatch =>{
             })
     }
     catch(error){
-        console.log(error);
-        //dispatch error here
         dispatch({
             type: ERROR,
             payload: "Cannot Delete Recipe At This Time. Try Again."
@@ -184,8 +173,6 @@ export const editRecipe = (recipe, index) => async dispatch =>{
         })
     }
     catch(error){
-        console.log(error);
-        //dispatch error here
         dispatch({
             type: ERROR,
             payload: "Not Able To Connect to Server At This Time. Try Again."
@@ -215,5 +202,19 @@ export const logout = () => async dispatch => (
 export const loading=()=>dispatch=>{
     dispatch({
         type: IS_LOADING
+    })
+}
+
+
+
+
+/*
+* ERROR
+*/
+
+export const error = (message)=>dispatch=>{
+    dispatch({
+        type: ERROR,
+        payload: message
     })
 }

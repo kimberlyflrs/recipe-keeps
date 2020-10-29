@@ -3,10 +3,8 @@ import axios from "axios";
 
 function setAuth(token){
   if (token) {
-    console.log('adding token: '+token);
     axios.defaults.headers.common = {'Authorization': `bearer `+token};
   } else {
-    console.log('deleting token: '+token);
     delete axios.defaults.headers.common;
   }
 };
@@ -32,7 +30,6 @@ const recipes = (state = initialState, action) =>{
         return {...state, registered:true, token:action.payload.acessToken, logged_in:true, isLoading:false, error:""}
       }
       else{
-        console.log("can't login");
         return {...state, error:"Error: Invalid Login Information"}
       }
     }
@@ -60,10 +57,12 @@ const recipes = (state = initialState, action) =>{
   
 
     case LOAD_USER:{
-      console.log('load user');
       if(action.payload.status===200){
         var token = localStorage.getItem('token');
         return {...state, logged_in:true, registered: true, added:false, token:token, recipes:action.payload.message, isLoading:false, error:""}
+      }
+      if(action.payload.status===500){
+        return{...state, error:"Cannot load recent entries at this time"};
       }
       localStorage.removeItem('token')
       return {...state, logged_in:false, registered: false, added:false,token:"", recipes:[], isLoading:false, error:""}
@@ -110,6 +109,9 @@ const recipes = (state = initialState, action) =>{
         localStorage.removeItem('token');
         return{...state, logged_in: false, registered: false, added: false, token:"",recipes: [],isLoading:false, error:""}
       }
+      else{
+        return {...state, error:"Cannot delete recipe at this time"}
+      }
     }
 
 
@@ -124,6 +126,9 @@ const recipes = (state = initialState, action) =>{
       if(action.payload.status===401){
         localStorage.removeItem('token');
         return{...state,logged_in: false,registered: false,added: false,token:"",recipes: [],isLoading:false, error:""}       
+      }
+      else{
+        return{...state, error:"Cannot make changes to recipe at this time"}
       }
     }
 

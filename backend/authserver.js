@@ -17,7 +17,6 @@ Sign Up
 */
 app.post('/signup', function(req, res, next){
     //email set to lower case
-    console.log('signing up');
     email = req.body['email'].toLowerCase();
     //Steps
     //1. Check email doesn't exist
@@ -61,8 +60,6 @@ app.post('/signup', function(req, res, next){
 Login POST
 */
 app.post('/login', function(req, res, next){ 
-    console.log('Log In through /login route');
-    console.log(req.body);
     email = req.body['email'].toLowerCase();
 
     //Step 1. Check if the user exists
@@ -101,30 +98,6 @@ app.post('/login', function(req, res, next){
 })
 
 
-/*
-Login GET
-*/
-app.get('/login', function(req, res, next){ 
-    console.log('Getting user info through /login route');
-    const authorization = req.headers.authorization.split(" ")[1];
-    try {
-        const decoded = jwt.verify(authorization, process.env.ACCESS_TOKEN);
-        console.log(decoded);
-        //get name, recipes
-        FoodEntry.find({userId: decoded._id}, (err,docs)=>{
-            if(err){
-                return res.send({status:500, message:"server error"});
-            }
-            else{
-                return res.send({status:200, message: docs[0]['Entries']});
-            }
-        });
-      } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ msg: "server error" });
-      }
-})
-
 
 /*
 Gets a refresh token
@@ -132,7 +105,6 @@ Gets a refresh token
 app.post('/token', function(req, res, next){
     //get the refresh token
     const refreshToken = req.body.token;
-    console.log(refreshToken);
     if(refreshToken===null){
         return res.send({message: "Error: Invalid Token"})
     }
@@ -148,7 +120,6 @@ app.post('/token', function(req, res, next){
                 if(err){
                     return ({message: "Error: JWT Verification"})
                 }
-                console.log(user);
                 const accessToken = generateAccessToken(user._id);
                 return res.json({accessToken: accessToken})
             })
@@ -162,11 +133,9 @@ app.post('/verify', function(req,res){
     const token = req.body.token;
     jwt.verify(token, process.env.ACCESS_TOKEN, (err,user)=>{
         if(err){//token has expired
-            console.log("Error here: "+ err);
             return res.send({status:401, message:err});
         }
         else{//token is valid
-            console.log("Valid: "+user);
             return res.send({status:200, message:"valid"});
         }
     })
@@ -189,7 +158,7 @@ app.delete('/logout', function(req,res,next){
 
 /*Generate Acess Token */
 function generateAccessToken(user){
-    return jwt.sign({_id: user}, process.env.ACCESS_TOKEN, {expiresIn: '15m'})
+    return jwt.sign({_id: user}, process.env.ACCESS_TOKEN, {expiresIn: '3m'})
 }
 
 

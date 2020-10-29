@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {addRecipe, deleteRecipe, editRecipe, userInfo, loading} from '../redux/actions';
+import {addRecipe, deleteRecipe, editRecipe, userInfo, loading, error} from '../redux/actions';
 import 'bootstrap/dist/css/bootstrap.css';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -46,6 +46,7 @@ class RecipeForm extends React.Component{
         this.backToAllRecipe = this.backToAllRecipe.bind(this);
         this.previewImage = this.previewImage.bind(this);
         this.deleteImage = this.deleteImage.bind(this);
+        this.fileSize = this.fileSize.bind(this);
     }
 
     async componentDidMount(){
@@ -61,6 +62,7 @@ class RecipeForm extends React.Component{
     mySubmitHandler = (event) => {
         event.preventDefault();
         const file = document.getElementById('recipe_image').files;
+
         const formData = new FormData(); 
         formData.append("img", file[0]); 
 
@@ -131,7 +133,7 @@ class RecipeForm extends React.Component{
         this.props.loading();
         await this.props.deleteRecipe(this.state.recipe._id, this.state.index, this.state.key);
         this.handleClose();
-        this.backToAllRecipe();
+        this.backToAllRecipe(true);
 
     }
 
@@ -147,10 +149,10 @@ class RecipeForm extends React.Component{
         })
     }
 
-    backToAllRecipe(){
+    backToAllRecipe(deleteRecipe){
         //if new recipe, go back to all recipes
         //if recipe exists, go back to that recipe
-        if(this.state.newRecipe){
+        if(this.state.newRecipe || deleteRecipe===true){
             this.setState({
                 navAllRecipe:true
             })
@@ -167,9 +169,19 @@ class RecipeForm extends React.Component{
 
     previewImage(event){
         //allows the user to preview image before uploading
-        this.setState({
-            image: URL.createObjectURL(event.target.files[0]),
-          })
+        var size = this.fileSize(event.target.files[0]);
+        console.log(size);
+        if(size){
+            this.props.error("")
+            this.setState({
+                image: URL.createObjectURL(event.target.files[0]),
+              })
+        }
+        else{
+            this.deleteImage();
+            this.props.error("File must be < 2 MB.")
+        }
+
     }
 
     deleteImage(){
@@ -183,6 +195,17 @@ class RecipeForm extends React.Component{
         })
     }
 
+    fileSize(file){
+        //checks that the file size is under mb
+        //returns true if meets size, false if otherwise
+        var size = file.size / 1024 / 1024;
+        console.log(size)
+        if (size>2){//2 mb
+            return false
+        }
+        return true
+    }
+
 
 
     render(){
@@ -190,7 +213,7 @@ class RecipeForm extends React.Component{
             return <Redirect to="/viewRecipes"/>
         }
         if(!this.props.loggedIn){
-            return <Redirect to="/landing"/>
+            return <Redirect to="/login"/>
         }
         if(this.state.navBackRecipe){
             console.log(this.state.link);
@@ -229,7 +252,7 @@ class RecipeForm extends React.Component{
             </Row>
 
             <h1>{title}</h1>
-            <p className="center error">{this.props.error}</p>
+            <p className="center error">{this.props.error_message}</p>
             <Form name="recipeForm" onSubmit={this.mySubmitHandler}> 
             <Form.Group as={Row} className="left-text spacing">
                 <Form.Label column sm="2" className="title">Recipe Name</Form.Label>
@@ -316,14 +339,15 @@ const mapDispatchToProps = {
     deleteRecipe,
     editRecipe,
     userInfo,
-    loading
+    loading,
+    error
 };
 
 const mapStateToProps = state => ({
     added: state.added,
     loggedIn: state.logged_in,
     isLoading: state.isLoading,
-    error: state.error
+    error_message: state.error
 })
 
 export default connect(mapStateToProps,mapDispatchToProps)(RecipeForm);

@@ -54,7 +54,6 @@ Get Food Entries
 */
 app.get('/entries', authenticateToken, function(req,res,next){
     //gets the food entries according to the user id
-    console.log('Getting user info through /login route');
     const authorization = req.headers.authorization.split(" ")[1];
     try {
         const decoded = jwt.verify(authorization, process.env.ACCESS_TOKEN);
@@ -67,18 +66,18 @@ app.get('/entries', authenticateToken, function(req,res,next){
             }
         });
       } catch (err) {
-        console.error(err.message);
         res.status(500).json({ msg: "server error" });
       }
 })
 
 
-/*NEW ADD ROUTE */
+/*
+ADD ROUTE 
+*/
 app.post( '/add', authenticateToken,( req, res ) => {
     var imageKey;
     imgUpload ( req, res, ( error ) => {
       if( error ){
-       console.log( 'errors', error );
        res.json( { error: error } );
       } else {
        // If File not found
@@ -104,6 +103,7 @@ app.post( '/add', authenticateToken,( req, res ) => {
             }
             FoodEntry.findOneAndUpdate({userId: decoded._id}, {$push: {"Entries":recipe}}, {safe:true, multi:true, new:true}, function(err, docs){
                 if(err){
+                    deleteImage(imageKey);
                     res.send({status:500, message:"Error: updating/Server Error"});
                 }
                 else{
@@ -113,9 +113,7 @@ app.post( '/add', authenticateToken,( req, res ) => {
             });
         }
         catch(err){
-            //DELETE IMAGE HERE
             deleteImage(imageKey);
-            console.log(err);
             res.send({status: 500});
         }
        }
@@ -131,7 +129,6 @@ app.post( '/edit', authenticateToken,( req, res ) => {
     var imageKey;
     imgUpload ( req, res, ( error ) => {
       if( error ){
-       console.log( 'errors', error );
        res.json( { error: error } );
       } else {
        // If File not found
@@ -148,6 +145,7 @@ app.post( '/edit', authenticateToken,( req, res ) => {
             const decoded = jwt.verify(auth, process.env.ACCESS_TOKEN);
             FoodEntry.findOne({userId: decoded._id}, function(err, doc){
                 if(err){
+                    deleteImage(imageKey);
                     res.send({status:500, message:"Error: updating/Server Error"});
                 }
                 else{
@@ -170,7 +168,6 @@ app.post( '/edit', authenticateToken,( req, res ) => {
         }
         catch(err){
             deleteImage(imageKey);
-            console.log(err);
             res.send({status: 500});
         }
       }
@@ -181,10 +178,8 @@ app.post( '/edit', authenticateToken,( req, res ) => {
 
 /*
 Delete Food Entry 
-FINDS THE ENTRY IF ALL GOOD THEN DELETE IMAGE
 */
 app.post('/delete', authenticateToken, function(req,res,next){
-    console.log(req.body);
     const authorization = req.headers.authorization.split(" ")[1];
     try{
         const decoded = jwt.verify(authorization, process.env.ACCESS_TOKEN);
@@ -199,7 +194,7 @@ app.post('/delete', authenticateToken, function(req,res,next){
         });
     }
     catch(err){
-        res.send({status:401, message:"Error: token"});
+        res.send({status:500, message:"Error: token"});
         }
 
 })

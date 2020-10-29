@@ -7,7 +7,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 
-class LandingPage extends React.Component{
+class SignupPage extends React.Component{
 
     render(){
         return(
@@ -34,4 +34,4 @@ class LandingPage extends React.Component{
 
 }
 
-export default LandingPage;
+export default SignupPage;

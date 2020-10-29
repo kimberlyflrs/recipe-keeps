@@ -9,9 +9,9 @@ import {Redirect} from 'react-router-dom';
 //Creates a Header component
 class Header extends React.Component{
     constructor(props){
-        super(props);
+        super();
         this.state ={
-            toLanding: false
+            toLogin: false
         }
         this.login = props.login;
         this.logout = this.logout.bind(this);
@@ -19,16 +19,16 @@ class Header extends React.Component{
     }
 
     logout(){
+        //nevigates to login
         this.props.logout();
-        //navigate to the LandingPage
         this.setState({
-            toLanding:true
+            toLogin:true
         })
     }
 
     render(){
-        if(this.state.toLanding){
-            return <Redirect to="/landing"/>
+        if(this.state.toLogin){
+            return <Redirect to="/login"/>
         }
         if(!this.props.logged_in){
             return(
@@ -37,7 +37,8 @@ class Header extends React.Component{
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ml-auto">
-                    <Nav.Link href="/landing">Log In</Nav.Link>
+                    <Nav.Link href="/login">Log In</Nav.Link>
+                    <Nav.Link href="/signup">Sign Up</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
                 </Navbar>               
@@ -51,7 +52,7 @@ class Header extends React.Component{
                 <Nav className="ml-auto">
                 <Nav.Link href="/viewRecipes">Recipes</Nav.Link>
                 <Nav.Link href="/">Settings</Nav.Link>
-                <Nav.Link href="/landing" onClick={this.logout}>Log Out</Nav.Link>
+                <Nav.Link href="/login" onClick={this.logout}>Log Out</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
             </Navbar>

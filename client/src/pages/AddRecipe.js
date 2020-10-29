@@ -5,6 +5,8 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Footer from '../components/Footer.js';
+import {connect} from 'react-redux';
+import {Redirect} from 'react-router-dom';
 
 
 
@@ -12,6 +14,9 @@ import Footer from '../components/Footer.js';
 class AddRecipe extends React.Component{
 
     render(){
+        if(!this.props.logged_in){
+            return <Redirect to="/login"/>
+        }
         return(
             <div>
             <Header/>
@@ -29,4 +34,10 @@ class AddRecipe extends React.Component{
 
 }
 
-export default AddRecipe;
+
+
+const mapStateToProps = state => ({
+    logged_in: state.logged_in
+})
+
+export default connect(mapStateToProps)(AddRecipe);
