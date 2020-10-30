@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
 require("dotenv/config");
+const path = require('path');
 
 //Connect Database
 mongoose.connect(process.env.DB_CONNECTION_STRING, 
