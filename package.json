@@ -7,7 +7,8 @@
     "test": "nodemon authserver.js",
     "devstart": "nodemon authserver.js",
     "devstart2": "nodemon server.js",
-    "start": "node serve.js"
+    "start": "node serve.js",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "author": "Kimberly Flores",
   "license": "ISC",
