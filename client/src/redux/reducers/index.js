@@ -128,7 +128,7 @@ const recipes = (state = initialState, action) =>{
         return{...state,logged_in: false,registered: false,added: false,token:"",recipes: [],isLoading:false, error:""}       
       }
       else{
-        return{...state, error:"Cannot make changes to recipe at this time"}
+        return{...state, isLoading:false, error:"Cannot make changes to recipe at this time"}
       }
     }
 

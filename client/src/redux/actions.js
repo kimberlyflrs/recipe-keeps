@@ -166,6 +166,7 @@ export const editRecipe = (recipe, index) => async dispatch =>{
         const res = await axios.post('/api/foodentries/edit',
         recipe        
         )
+        console.log("edit recipe actions")
         dispatch({type: EDIT_RECIPE,
             recipe:recipe,
             index: index,

@@ -107,13 +107,16 @@ class RecipeForm extends React.Component{
 
     async editRecipe(recipe, index){
         //edits the recipe and then redirects to all recipes
-        console.log('addRecipe has been clicked');
+        console.log('editRecipe has been clicked');
         await this.props.editRecipe(recipe,index, this.state.key);
+        console.log('inside editRecipe');
+        console.log(this.props.added);
+        console.log(this.props.isLoading);
         if(this.props.added){
-            var recipe = {
+            var recipe_copy = {
                 name: this.state.name,
-                prep: this.state.prep,
-                cook: this.state.cook,
+                prep_time: this.state.prep,
+                cook_time: this.state.cook,
                 ingredients: this.state.ingredients,
                 directions: this.state.directions,
                 image: this.state.image,//preview image
@@ -121,7 +124,7 @@ class RecipeForm extends React.Component{
                 _id: this.state.recipe._id
             }
             this.setState({
-                recipe: recipe,
+                recipe: recipe_copy,
                 navBackRecipe:true,
                 link: "/recipe/view/"+this.state.recipe._id
             })
@@ -198,9 +201,8 @@ class RecipeForm extends React.Component{
     fileSize(file){
         //checks that the file size is under mb
         //returns true if meets size, false if otherwise
-        var size = file.size / 1024 / 1024;
-        console.log(size)
-        if (size>2){//2 mb
+        var size= file.size;
+        if (size>2000000){//2 mb
             return false
         }
         return true

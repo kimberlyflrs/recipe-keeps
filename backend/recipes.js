@@ -78,8 +78,8 @@ app.post( '/add', authenticateToken,( req, res ) => {
     var imageKey;
     imgUpload ( req, res, ( error ) => {
       if( error ){
-       res.json( { error: error } );
-      } else {
+        res.send({status: 500, message: "File size too large"})
+    } else {
        // If File not found
        var imageLocation = req.body.imgLoc;
        var imageName = req.body.imageKey;
@@ -114,7 +114,7 @@ app.post( '/add', authenticateToken,( req, res ) => {
         }
         catch(err){
             deleteImage(imageKey);
-            res.send({status: 500});
+            res.send({status: 200});
         }
        }
      });
@@ -129,7 +129,8 @@ app.post( '/edit', authenticateToken,( req, res ) => {
     var imageKey;
     imgUpload ( req, res, ( error ) => {
       if( error ){
-       res.json( { error: error } );
+          console.log('1')
+          res.send({status: 500, message: "File size too large"})
       } else {
        // If File not found
        var imageLocation = req.body.imgLoc;
@@ -168,7 +169,7 @@ app.post( '/edit', authenticateToken,( req, res ) => {
         }
         catch(err){
             deleteImage(imageKey);
-            res.send({status: 500});
+            res.send({status: 200});
         }
       }
      });
