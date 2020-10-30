@@ -4,10 +4,8 @@
   "description": "backend server for recipe keeps project",
   "main": "authserver.js",
   "scripts": {
-    "test": "nodemon authserver.js",
-    "devstart": "nodemon authserver.js",
-    "devstart2": "nodemon server.js",
     "start": "node serve.js",
+    "server": "node serve.js",
     "client": "npm start --prefix client",
     "clientinstall": "npm install --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\" ",
