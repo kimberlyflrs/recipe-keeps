@@ -8,6 +8,9 @@
     "devstart": "nodemon authserver.js",
     "devstart2": "nodemon server.js",
     "start": "node serve.js",
+    "client": "npm start --prefix client",
+    "clientinstall": "npm install --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\" ",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "author": "Kimberly Flores",
