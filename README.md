@@ -23,4 +23,4 @@ I wanted to make a tool that would allow me to keep track of family recipes. I u
 To run the server, 'node serve.js'
 To run the client, index into client and 'npm start'
 
-Or check out the [project](obscure-taiga-26298.herokuapp.com/)
+Or check out the [project](https://obscure-taiga-26298.herokuapp.com/)
