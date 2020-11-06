@@ -267,11 +267,18 @@ class RecipeForm extends React.Component{
                 <Form.Label column sm="12" className="title">Image Upload</Form.Label>
             </Form.Group>
             <Form.Group as={Row} className="left-text">
-                <Form.File id="recipe_image" label="Upload Image" accept="image/*" onChange={this.previewImage}>
-                </Form.File>
-                <img src={this.state.image} className="recipe-image" id="preview" alt="No file found"/>
-                <Button onClick={this.deleteImage}>Remove Image</Button>
+                <Col xs="12" sm="12" md="4" lg="4">
+                    <Form.File id="recipe_image" accept="image/*" onChange={this.previewImage}>
+                    </Form.File>
+                </Col>
+                <Col xs="12" sm="12" md="4" lg="4">
+                    <img src={this.state.image} className="recipe-image" id="preview" alt="No file found"/>
+                </Col>
+                <Col xs="12" sm="12" md="4" lg="4">
+                    <Button onClick={this.deleteImage}>Remove Image</Button>
+                </Col>
             </Form.Group>
+
 
             <Form.Row className="left-text spacing">
                 <Col>

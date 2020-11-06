@@ -47,7 +47,7 @@ app.post('/signup', function(req, res, next){
                     return res.send({status:200, message: "Successful registration"});
                 }
                 catch(err){
-                    return res.send({status:500, message:err})
+                    return res.send({status:500, message:"Error: Server Error"})
                 }
 
 
@@ -69,7 +69,7 @@ app.post('/login', function(req, res, next){
     //-------else throw an error
     User.find({email: email}, (err,docs)=>{
         if(err){
-            return res.send({status:500, message: "Error: Server Error 1"})
+            return res.send({status:500, message: "Error: Server Error"})
         }
         else if(docs.length == 0){
             return res.send({status:404, message: "Error: Account does not exist"});
@@ -158,7 +158,7 @@ app.delete('/logout', function(req,res,next){
 
 /*Generate Acess Token */
 function generateAccessToken(user){
-    return jwt.sign({_id: user}, process.env.ACCESS_TOKEN, {expiresIn: '3m'})
+    return jwt.sign({_id: user}, process.env.ACCESS_TOKEN, {expiresIn: '10080m'})
 }
 
 

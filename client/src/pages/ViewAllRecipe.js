@@ -8,8 +8,7 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Footer from '../components/Footer.js';
 import Loading from '../components/Loading.js';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Dropdown from 'react-bootstrap/Dropdown'
+import Form from 'react-bootstrap/Form';
 
 import {Redirect} from 'react-router-dom';
 import { userInfo, loading } from '../redux/actions.js';
@@ -22,17 +21,19 @@ class ViewAllRecipe extends React.Component{
         this.state = {
             navAddRecipe: false,
             navRecipe: false, //use this so when a card is clicked we take them to the corresponding card
-            sort: false
+            filterList: []
         }
         this.addRecipe = this.addRecipe.bind(this);
-        this.sortNewToOld = this.sortNewToOld.bind(this);
-        this.sortOldToNew = this.sortOldToNew.bind(this);
         this.tryAgain = this.tryAgain.bind(this);
+        this.searchList = this.searchList.bind(this);
     }
 
     async componentDidMount(){
         this.props.loading();
         await this.props.userInfo();
+        this.setState({
+            filterList: this.props.all_recipes
+        })
     }
     
 
@@ -43,19 +44,19 @@ class ViewAllRecipe extends React.Component{
         })
     }
 
-    sortNewToOld(){
-        //sorts recipe new to old
+    searchList(){
+        //returns a filtered list
+        console.log("searching through list");
+        var name = document.getElementById('searchbar').value;
+        const filter = this.props.all_recipes.filter(recipe =>
+            {
+                return recipe.name.toLowerCase().includes(name.toLowerCase())
+            })
         this.setState({
-            sort:true
+            filterList: filter
         })
     }
 
-    sortOldToNew(){
-        //sorts recipe old to new
-        this.setState({
-            sort:false
-        })
-    }
 
     async tryAgain(){
         //let's the user reload recipes again
@@ -75,7 +76,7 @@ class ViewAllRecipe extends React.Component{
             content = <h2>No recipes</h2>
         }
 
-        content = this.props.all_recipes.map((x, i)=>
+        content = this.state.filterList.map((x, i)=>
             <div className="center2">
                 <RecipeCard key={x._id} id={x._id} recipe={x} index={i} image={x.image}/>
             </div>)
@@ -117,15 +118,21 @@ class ViewAllRecipe extends React.Component{
                         <h1>All Recipes</h1>
                     </Col>
                 </Row>
+
                 <Row className="spacing center">
-                    <Col xs={6} sm={6} m={6} lg={6}>
-                    <Button className="btn-edit" onClick={this.addRecipe}>Add Recipe</Button>
+                    <Col xs={12} sm={12} m={6} lg={6} className="my-auto">
+                    <Form>
+                        <Form.Group as={Row}>
+                        <Form.Label column sm={2}>Search: </Form.Label>
+                        <Col sm="10">
+                        <Form.Control placeholder="Search for Recipes" name="searchbar" id="searchbar" onChange={this.searchList}></Form.Control>
+                        </Col>
+                        </Form.Group>
+                    </Form>
                     </Col>
-                    <Col xs={6} sm={6} m={6} lg={6}>
-                        <DropdownButton id="dropdown-basic-button" title="Sort">
-                            <Dropdown.Item onClick={this.sortNewToOld}>Newest to Oldest</Dropdown.Item>
-                            <Dropdown.Item onClick={this.sortOldToNew}>Oldest to Newest</Dropdown.Item>
-                        </DropdownButton>
+
+                    <Col xs={12} sm={12} m={6} lg={6} className="my-auto">
+                    <Button className="btn-edit" onClick={this.addRecipe}>Add Recipe</Button>
                     </Col>
                 </Row>
                 <Row>

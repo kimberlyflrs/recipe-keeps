@@ -103,7 +103,7 @@ app.post( '/add', authenticateToken,( req, res ) => {
             }
             FoodEntry.findOneAndUpdate({userId: decoded._id}, {$push: {"Entries":recipe}}, {safe:true, multi:true, new:true}, function(err, docs){
                 if(err){
-                    deleteImage(imageKey);
+                    //deleteImage(imageKey);
                     res.send({status:500, message:"Error: updating/Server Error"});
                 }
                 else{
@@ -113,7 +113,7 @@ app.post( '/add', authenticateToken,( req, res ) => {
             });
         }
         catch(err){
-            deleteImage(imageKey);
+            //deleteImage(imageKey);
             res.send({status: 200});
         }
        }
@@ -146,7 +146,7 @@ app.post( '/edit', authenticateToken,( req, res ) => {
             const decoded = jwt.verify(auth, process.env.ACCESS_TOKEN);
             FoodEntry.findOne({userId: decoded._id}, function(err, doc){
                 if(err){
-                    deleteImage(imageKey);
+                    //deleteImage(imageKey);
                     res.send({status:500, message:"Error: updating/Server Error"});
                 }
                 else{
@@ -168,7 +168,7 @@ app.post( '/edit', authenticateToken,( req, res ) => {
             });
         }
         catch(err){
-            deleteImage(imageKey);
+            //deleteImage(imageKey);
             res.send({status: 200});
         }
       }
@@ -189,7 +189,7 @@ app.post('/delete', authenticateToken, function(req,res,next){
                 res.send({status:500, message:"Error: updating/Server Error"});
             }
             else{
-                deleteImage(req.body.imageKey)
+                //deleteImage(req.body.imageKey)
                 res.send({status:200, message:"success in deleting"});
             }
         });
