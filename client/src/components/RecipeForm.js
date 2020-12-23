@@ -21,7 +21,7 @@ class RecipeForm extends React.Component{
             name: props.recipe.name || "",
             prep: props.recipe.prep_time || "",
             cook: props.recipe.cook_time || "",
-            ingredients: props.recipe.ingredients || "",
+            ingredients: props.recipe.ingredients.join(",") || "", 
             directions: props.recipe.directions || "",
             image: props.recipe.image ||"",//preview image
             key: props.recipe.imageKey || "", //previous image key 
@@ -50,7 +50,8 @@ class RecipeForm extends React.Component{
     }
 
     async componentDidMount(){
-        await this.props.userInfo()
+        await this.props.userInfo();
+        console.log("component mounting: "+typeof this.state.ingredients);
     }
 
     handleInputChange(e){
@@ -107,17 +108,16 @@ class RecipeForm extends React.Component{
 
     async editRecipe(recipe, index){
         //edits the recipe and then redirects to all recipes
-        console.log('editRecipe has been clicked');
+        console.log(this.state.ingredients);
         await this.props.editRecipe(recipe,index, this.state.key);
-        console.log('inside editRecipe');
-        console.log(this.props.added);
-        console.log(this.props.isLoading);
+        console.log(typeof this.state.ingredients);
+        var ingredientsList = this.state.ingredients.split(",");
         if(this.props.added){
             var recipe_copy = {
                 name: this.state.name,
                 prep_time: this.state.prep,
                 cook_time: this.state.cook,
-                ingredients: this.state.ingredients,
+                ingredients: ingredientsList, //check this out
                 directions: this.state.directions,
                 image: this.state.image,//preview image
                 imageKey: this.state.key, //previous image key 
@@ -301,7 +301,7 @@ class RecipeForm extends React.Component{
             </Form.Row>
 
             <Form.Group className="left-text spacing">
-            <Form.Label className="title">Ingredients: </Form.Label>
+            <Form.Label className="title">Ingredients: (Separate each ingredient with a comma ',')</Form.Label>
                 <Form.Control name="ingredients" as="textarea" rows="4" value={this.state.ingredients} onChange={this.handleInputChange}></Form.Control>
             </Form.Group>
 

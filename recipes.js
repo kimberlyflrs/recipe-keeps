@@ -96,7 +96,7 @@ app.post( '/add', authenticateToken,( req, res ) => {
                 "name": req.body.name,
                 "prep_time": req.body.prep_time,
                 "cook_time": req.body.cook_time,
-                "ingredients": req.body.ingredients,
+                "ingredients": req.body.ingredients.split(','),
                 "directions": req.body.directions,
                 "image": imageLocation,
                 "imageKey": imageName
@@ -150,15 +150,18 @@ app.post( '/edit', authenticateToken,( req, res ) => {
                     res.send({status:500, message:"Error: updating/Server Error"});
                 }
                 else{
+                    console.log(req.body.ingredients)
                     var recipe = {
                         "name": req.body.name,
                         "prep_time": req.body.prep_time,
                         "cook_time": req.body.cook_time,
-                        "ingredients": req.body.ingredients,
+                        "ingredients": req.body.ingredients.split(","),
                         "directions": req.body.directions,
                         "image": imageLocation,
                         "imageKey": imageName
                     }
+                    console.log(req.body.ingredients);
+                    console.log(recipe.ingredients);
                     deleteImage(req.body.imgKey);
                     doc.Entries[req.body.index] = recipe;
                     doc.markModified("Entries");

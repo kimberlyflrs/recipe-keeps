@@ -38,6 +38,7 @@ class RecipeView extends React.Component{
 
     render(){
         var ingredients;
+        var directions;
         if(this.state.viewAll){
             return <Redirect to="/viewRecipes"/>
         }
@@ -47,8 +48,15 @@ class RecipeView extends React.Component{
             return <Redirect to={{pathname: link, state:{recipe: this.recipe, index:this.index}} }/>
         }
         console.log(this.props.recipe.ingredients);
+        //ingredients = this.props.recipe.ingredients.split("\n");
         ingredients = this.props.recipe.ingredients.map((item,key)=>
-            <li key={key}><span>{item}</span></li>)
+            <li key={key}><span>{item}</span></li>
+        )
+
+        directions = this.props.recipe.directions.split("\n");
+        directions = directions.map((item,key)=>
+            <p key={key}>{item}</p>
+        )
 
 
         return(
@@ -89,7 +97,7 @@ class RecipeView extends React.Component{
             <Row className="row-space">
                 <Col xs={12} sm={12} m={12} lg={12} className="left">
                     <h5 className="title">Directions:  </h5>
-                    <p>{this.props.recipe.directions}</p>
+                    {directions}
                 </Col>
             </Row>
             </div>
