@@ -30,7 +30,6 @@ class RecipeView extends React.Component{
 
     editRecipe(){
         //navigate to edit mode for recipe
-        console.log('going to edit recipe from recipeview');
         this.setState({
             edit: true
         })
@@ -47,8 +46,6 @@ class RecipeView extends React.Component{
             var link = "/recipe/edit/"+this.recipe._id
             return <Redirect to={{pathname: link, state:{recipe: this.recipe, index:this.index}} }/>
         }
-        console.log(this.props.recipe.ingredients);
-        //ingredients = this.props.recipe.ingredients.split("\n");
         ingredients = this.props.recipe.ingredients.map((item,key)=>
             <li key={key}><span>{item}</span></li>
         )
