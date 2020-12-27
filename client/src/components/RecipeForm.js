@@ -51,7 +51,6 @@ class RecipeForm extends React.Component{
 
     async componentDidMount(){
         await this.props.userInfo();
-        console.log("component mounting: "+typeof this.state.ingredients);
         if(!this.state.newRecipe){
             this.setState({
                 ingredients: this.state.ingredients.join(',')
@@ -113,9 +112,7 @@ class RecipeForm extends React.Component{
 
     async editRecipe(recipe, index){
         //edits the recipe and then redirects to all recipes
-        console.log(this.state.ingredients);
         await this.props.editRecipe(recipe,index, this.state.key);
-        console.log(typeof this.state.ingredients);
         var ingredientsList = this.state.ingredients.split(",");
         if(this.props.added){
             var recipe_copy = {
@@ -166,7 +163,6 @@ class RecipeForm extends React.Component{
             })
         }
         else{
-            console.log(this.state.recipe._id);
             this.setState({
                 navBackRecipe:true,
                 link: "/recipe/view/"+this.state.recipe._id
@@ -178,7 +174,6 @@ class RecipeForm extends React.Component{
     previewImage(event){
         //allows the user to preview image before uploading
         var size = this.fileSize(event.target.files[0]);
-        console.log(size);
         if(size){
             this.props.error("")
             this.setState({
@@ -223,8 +218,7 @@ class RecipeForm extends React.Component{
             return <Redirect to="/login"/>
         }
         if(this.state.navBackRecipe){
-            console.log(this.state.link);
-            console.log(this.state.recipe);
+
             return <Redirect to={{pathname: this.state.link, state:{recipe: this.state.recipe, index:this.state.index}} }/>
         }
         var buttons;
