@@ -50,7 +50,6 @@ class Header extends React.Component{
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="ml-auto">
-                <Nav.Link href="/viewRecipes">Recipes</Nav.Link>
                 <Nav.Link href="/login" onClick={this.logout}>Log Out</Nav.Link>
                 </Nav>
             </Navbar.Collapse>

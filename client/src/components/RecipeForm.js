@@ -21,7 +21,7 @@ class RecipeForm extends React.Component{
             name: props.recipe.name || "",
             prep: props.recipe.prep_time || "",
             cook: props.recipe.cook_time || "",
-            ingredients: props.recipe.ingredients.join(",") || "", 
+            ingredients: props.recipe.ingredients || "", 
             directions: props.recipe.directions || "",
             image: props.recipe.image ||"",//preview image
             key: props.recipe.imageKey || "", //previous image key 
@@ -52,6 +52,11 @@ class RecipeForm extends React.Component{
     async componentDidMount(){
         await this.props.userInfo();
         console.log("component mounting: "+typeof this.state.ingredients);
+        if(!this.state.newRecipe){
+            this.setState({
+                ingredients: this.state.ingredients.join(',')
+            })
+        }
     }
 
     handleInputChange(e){
